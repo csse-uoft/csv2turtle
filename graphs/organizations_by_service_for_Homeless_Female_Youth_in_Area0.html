@@ -1,0 +1,80 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1>Organizations By Service For Homeless Female Youth In Area0<br/><br/><i>What cp:Organization (s) by cp:Service type exist in my cp:Community</i></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 100%;
+            height: 90%;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"group": 1, "id": "Org10", "label": "Org10", "shape": "dot", "size": 6}, {"group": 2, "id": "P10-1", "label": "P10-1", "shape": "dot", "size": 8}, {"group": 3, "id": "S10-1-Shelter", "label": "S10-1-Shelter", "shape": "dot", "size": 10}, {"group": 1, "id": "Org11", "label": "Org11", "shape": "dot", "size": 6}, {"group": 2, "id": "P11-1", "label": "P11-1", "shape": "dot", "size": 7}, {"group": 2, "id": "P11-3", "label": "P11-3", "shape": "dot", "size": 7}, {"group": 3, "id": "S11-1-Food", "label": "S11-1-Food", "shape": "dot", "size": 9}, {"group": 3, "id": "S11-3-Food", "label": "S11-3-Food", "shape": "dot", "size": 9}, {"group": 4, "id": "CL-Shelter", "label": "CL-Shelter", "shape": "dot", "size": 11}, {"group": 4, "id": "CL-Food", "label": "CL-Food", "shape": "dot", "size": 15}, {"group": 4, "id": "CL-Female @ Area0", "label": "CL-Female @ Area0", "shape": "dot", "size": 11}, {"group": 4, "id": "CL-Homeless @ Area0", "label": "CL-Homeless @ Area0", "shape": "dot", "size": 11}, {"group": 4, "id": "CL-Youth @ Area0", "label": "CL-Youth @ Area0", "shape": "dot", "size": 11}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": "Org10", "label": 1, "to": "P10-1", "weight": 1}, {"arrows": "to", "from": "P10-1", "label": 1, "to": "S10-1-Shelter", "weight": 1}, {"arrows": "to", "from": "Org11", "label": 1, "to": "P11-1", "weight": 1}, {"arrows": "to", "from": "Org11", "label": 1, "to": "P11-3", "weight": 1}, {"arrows": "to", "from": "P11-1", "label": 1, "to": "S11-1-Food", "weight": 1}, {"arrows": "to", "from": "P11-3", "label": 1, "to": "S11-3-Food", "weight": 1}, {"arrows": "to", "from": "S10-1-Shelter", "label": 1, "to": "CL-Shelter", "weight": 1}, {"arrows": "to", "from": "S11-1-Food", "label": 1, "to": "CL-Food", "weight": 1}, {"arrows": "to", "from": "S11-3-Food", "label": 1, "to": "CL-Food", "weight": 1}, {"arrows": "to", "from": "CL-Shelter", "label": 1, "to": "CL-Female @ Area0", "weight": 1}, {"arrows": "to", "from": "CL-Shelter", "label": 1, "to": "CL-Homeless @ Area0", "weight": 1}, {"arrows": "to", "from": "CL-Shelter", "label": 1, "to": "CL-Youth @ Area0", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "CL-Female @ Area0", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "CL-Homeless @ Area0", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "CL-Youth @ Area0", "weight": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {"physics": {"enabled": true}, "minVelocity": 0.05, "timestep": 0.22, "forceAtlas2Based": {"gravitationalConstant": -100, "centralGravity": 0.11, "springLength": 100, "springConstant": 0.09, "avoidOverlap": 1}, "barnesHut": {"gravitationalConstant": 100, "avoidOverlap": 1}, "solver": "barnesHut"};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

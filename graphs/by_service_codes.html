@@ -1,0 +1,80 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1>By Service Codes</h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 100%;
+            height: 90%;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"group": 1, "id": "Org10", "label": "Org10", "shape": "dot", "size": 6}, {"group": 1, "id": "Org20", "label": "Org20", "shape": "dot", "size": 8}, {"group": 1, "id": "Org100", "label": "Org100", "shape": "dot", "size": 15}, {"group": 1, "id": "Org11", "label": "Org11", "shape": "dot", "size": 6}, {"group": 1, "id": "Org30", "label": "Org30", "shape": "dot", "size": 6}, {"group": 1, "id": "Org50", "label": "Org50", "shape": "dot", "size": 8}, {"group": 1, "id": "Org13", "label": "Org13", "shape": "dot", "size": 7}, {"group": 1, "id": "Org12", "label": "Org12", "shape": "dot", "size": 6}, {"group": 1, "id": "Org40", "label": "Org40", "shape": "dot", "size": 7}, {"group": 4, "id": "CL-Food", "label": "CL-Food", "shape": "dot", "size": 5}, {"group": 4, "id": "CL-Shelter", "label": "CL-Shelter", "shape": "dot", "size": 5}, {"group": 4, "id": "CL-Education", "label": "CL-Education", "shape": "dot", "size": 5}, {"group": 4, "id": "CL-Health", "label": "CL-Health", "shape": "dot", "size": 5}]);
+        edges = new vis.DataSet([{"arrows": "to", "color": "#cf120d", "from": "Org10", "label": 100.0, "title": 100.0, "to": "Org20", "weight": 100.0}, {"arrows": "to", "color": "#cf120d", "from": "Org10", "label": 100.0, "title": 100.0, "to": "Org20", "weight": 100.0}, {"arrows": "to", "color": "#bb2622", "from": "Org10", "label": 120.0, "title": 120.0, "to": "Org20", "weight": 120.0}, {"arrows": "to", "color": "#fa2d28", "from": "Org20", "label": 200.0, "title": 200.0, "to": "Org100", "weight": 200.0}, {"arrows": "to", "color": "#fa2d28", "from": "Org20", "label": 200.0, "title": 200.0, "to": "Org100", "weight": 200.0}, {"arrows": "to", "color": "#bb2622", "from": "Org11", "label": 120.0, "title": 120.0, "to": "Org20", "weight": 120.0}, {"arrows": "to", "color": "#bb2622", "from": "Org11", "label": 120.0, "title": 120.0, "to": "Org20", "weight": 120.0}, {"arrows": "to", "color": "#9b4847", "from": "Org11", "label": 40.0, "title": 40.0, "to": "Org30", "weight": 40.0}, {"arrows": "to", "color": "#9b4847", "from": "Org11", "label": 40.0, "title": 40.0, "to": "Org30", "weight": 40.0}, {"arrows": "to", "color": "#d97d7b", "from": "Org11", "label": 120.0, "title": 120.0, "to": "Org50", "weight": 120.0}, {"arrows": "to", "color": "#fa2d28", "from": "Org30", "label": 200.0, "title": 200.0, "to": "Org100", "weight": 200.0}, {"arrows": "to", "color": "#8c5655", "from": "Org50", "label": 100.0, "title": 100.0, "to": "Org100", "weight": 100.0}, {"arrows": "to", "color": "#d97d7b", "from": "Org13", "label": 120.0, "title": 120.0, "to": "Org50", "weight": 120.0}, {"arrows": "to", "color": "#d97d7b", "from": "Org13", "label": 20.0, "title": 20.0, "to": "Org50", "weight": 20.0}, {"arrows": "to", "color": "#d97d7b", "from": "Org13", "label": 120.0, "title": 120.0, "to": "Org50", "weight": 120.0}, {"arrows": "to", "color": "#fe4743", "from": "Org13", "label": 50.0, "title": 50.0, "to": "Org50", "weight": 50.0}, {"arrows": "to", "color": "#7e2422", "from": "Org12", "label": 55.0, "title": 55.0, "to": "Org40", "weight": 55.0}, {"arrows": "to", "color": "#7e2422", "from": "Org12", "label": 55.0, "title": 55.0, "to": "Org40", "weight": 55.0}, {"arrows": "to", "color": "#7c1e1c", "from": "Org12", "label": 110.0, "title": 110.0, "to": "Org40", "weight": 110.0}, {"arrows": "to", "color": "#8c5655", "from": "Org40", "label": 100.0, "title": 100.0, "to": "Org100", "weight": 100.0}, {"arrows": "to", "color": "#8c5655", "from": "Org40", "label": 100.0, "title": 100.0, "to": "Org100", "weight": 100.0}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Food", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Shelter", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Shelter", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Shelter", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Shelter", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Education", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Health", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Health", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Health", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Health", "label": 1, "to": "Org13", "weight": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {"physics": {"enabled": true}, "minVelocity": 0.05, "timestep": 0.22, "forceAtlas2Based": {"gravitationalConstant": -100, "centralGravity": 0.11, "springLength": 100, "springConstant": 0.09, "avoidOverlap": 1}, "barnesHut": {"gravitationalConstant": 100, "avoidOverlap": 1}, "solver": "barnesHut"};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

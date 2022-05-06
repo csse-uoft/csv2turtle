@@ -1,0 +1,26 @@
+name: Py2Turtle
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python==3.9
+  - numpy
+  - matplotlib
+  - seaborn
+  - pandas
+  - tqdm=4.61.2
+  - unidecode
+  - plotly
+  - networkx=2.6
+  - xlsxwriter
+  - jupyter
+  - pygraphviz
+  - pyvis
+  - pip
+  - pip:
+    - pyyaml
+    - graphviz
+    - openpyxl
+
+ 

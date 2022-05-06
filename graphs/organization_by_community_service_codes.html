@@ -1,0 +1,80 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1>Organization By Community Service Codes<br/><br/><i>What cp:Organizations service a community?</i></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 100%;
+            height: 90%;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"group": 4, "id": "CL-Female", "label": "CL-Female", "shape": "dot", "size": 9}, {"group": 1, "id": "Org10", "label": "Org10", "shape": "dot", "size": 10}, {"group": 1, "id": "Org100", "label": "Org100", "shape": "dot", "size": 10}, {"group": 1, "id": "Org11", "label": "Org11", "shape": "dot", "size": 10}, {"group": 1, "id": "Org12", "label": "Org12", "shape": "dot", "size": 10}, {"group": 1, "id": "Org13", "label": "Org13", "shape": "dot", "size": 10}, {"group": 1, "id": "Org20", "label": "Org20", "shape": "dot", "size": 10}, {"group": 1, "id": "Org30", "label": "Org30", "shape": "dot", "size": 10}, {"group": 1, "id": "Org40", "label": "Org40", "shape": "dot", "size": 10}, {"group": 1, "id": "Org50", "label": "Org50", "shape": "dot", "size": 10}, {"group": 99, "id": "Area0 @ S10-1-Shelter", "label": "Area0 @ S10-1-Shelter", "shape": "dot", "size": 12}, {"group": 99, "id": "Area0 @ S10-3-Food", "label": "Area0 @ S10-3-Food", "shape": "dot", "size": 12}, {"group": 4, "id": "CL-Homeless", "label": "CL-Homeless", "shape": "dot", "size": 9}, {"group": 4, "id": "CL-Youth", "label": "CL-Youth", "shape": "dot", "size": 9}, {"group": 99, "id": "Area0 @ S100-a100", "label": "Area0 @ S100-a100", "shape": "dot", "size": 11}, {"group": 99, "id": "Area0 @ S101-a101", "label": "Area0 @ S101-a101", "shape": "dot", "size": 11}, {"group": 99, "id": "Area1 @ S101-a101", "label": "Area1 @ S101-a101", "shape": "dot", "size": 11}, {"group": 99, "id": "Area0 @ S11-1-Food", "label": "Area0 @ S11-1-Food", "shape": "dot", "size": 12}, {"group": 99, "id": "Area0 @ S11-3-Food", "label": "Area0 @ S11-3-Food", "shape": "dot", "size": 12}, {"group": 99, "id": "Area1 @ S12-1-Education", "label": "Area1 @ S12-1-Education", "shape": "dot", "size": 11}, {"group": 99, "id": "Area1 @ S12-2-Education", "label": "Area1 @ S12-2-Education", "shape": "dot", "size": 11}, {"group": 99, "id": "Area1 @ S12-3-Education", "label": "Area1 @ S12-3-Education", "shape": "dot", "size": 11}, {"group": 99, "id": "Area1 @ S13-3-Health", "label": "Area1 @ S13-3-Health", "shape": "dot", "size": 12}, {"group": 99, "id": "Area1 @ S13-4-Food", "label": "Area1 @ S13-4-Food", "shape": "dot", "size": 12}, {"group": 99, "id": "Area0 @ S20-a1", "label": "Area0 @ S20-a1", "shape": "dot", "size": 12}, {"group": 99, "id": "Area0 @ S20-a2", "label": "Area0 @ S20-a2", "shape": "dot", "size": 12}, {"group": 99, "id": "Area0 @ S30-a3", "label": "Area0 @ S30-a3", "shape": "dot", "size": 15}, {"group": 99, "id": "Area1 @ S40-a4", "label": "Area1 @ S40-a4", "shape": "dot", "size": 12}, {"group": 99, "id": "Area1 @ S40-a5", "label": "Area1 @ S40-a5", "shape": "dot", "size": 12}, {"group": 99, "id": "Area1 @ S50-a6na7", "label": "Area1 @ S50-a6na7", "shape": "dot", "size": 15}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org100", "weight": 1}, {"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org20", "weight": 1}, {"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org30", "weight": 1}, {"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org40", "weight": 1}, {"arrows": "to", "from": "CL-Female", "label": 1, "to": "Org50", "weight": 1}, {"arrows": "to", "from": "Org10", "label": 1, "to": "Area0 @ S10-1-Shelter", "weight": 1}, {"arrows": "to", "from": "Org10", "label": 1, "to": "Area0 @ S10-3-Food", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org100", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org20", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org30", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org40", "weight": 1}, {"arrows": "to", "from": "CL-Homeless", "label": 1, "to": "Org50", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org10", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org100", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org11", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org12", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org13", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org20", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org30", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org40", "weight": 1}, {"arrows": "to", "from": "CL-Youth", "label": 1, "to": "Org50", "weight": 1}, {"arrows": "to", "from": "Org100", "label": 1, "to": "Area0 @ S100-a100", "weight": 1}, {"arrows": "to", "from": "Org100", "label": 1, "to": "Area0 @ S101-a101", "weight": 1}, {"arrows": "to", "from": "Org100", "label": 1, "to": "Area1 @ S101-a101", "weight": 1}, {"arrows": "to", "from": "Org11", "label": 1, "to": "Area0 @ S11-1-Food", "weight": 1}, {"arrows": "to", "from": "Org11", "label": 1, "to": "Area0 @ S11-3-Food", "weight": 1}, {"arrows": "to", "from": "Org12", "label": 1, "to": "Area1 @ S12-1-Education", "weight": 1}, {"arrows": "to", "from": "Org12", "label": 1, "to": "Area1 @ S12-2-Education", "weight": 1}, {"arrows": "to", "from": "Org12", "label": 1, "to": "Area1 @ S12-3-Education", "weight": 1}, {"arrows": "to", "from": "Org13", "label": 1, "to": "Area1 @ S13-3-Health", "weight": 1}, {"arrows": "to", "from": "Org13", "label": 1, "to": "Area1 @ S13-4-Food", "weight": 1}, {"arrows": "to", "from": "Org20", "label": 1, "to": "Area0 @ S20-a1", "weight": 1}, {"arrows": "to", "from": "Org20", "label": 1, "to": "Area0 @ S20-a2", "weight": 1}, {"arrows": "to", "from": "Org30", "label": 1, "to": "Area0 @ S30-a3", "weight": 1}, {"arrows": "to", "from": "Org40", "label": 1, "to": "Area1 @ S40-a4", "weight": 1}, {"arrows": "to", "from": "Org40", "label": 1, "to": "Area1 @ S40-a5", "weight": 1}, {"arrows": "to", "from": "Org50", "label": 1, "to": "Area1 @ S50-a6na7", "weight": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {"physics": {"enabled": true}, "minVelocity": 0.05, "timestep": 0.22, "forceAtlas2Based": {"gravitationalConstant": -100, "centralGravity": 0.11, "springLength": 100, "springConstant": 0.09, "avoidOverlap": 1}, "barnesHut": {"gravitationalConstant": 100, "avoidOverlap": 1}, "solver": "barnesHut"};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

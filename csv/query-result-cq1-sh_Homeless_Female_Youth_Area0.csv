@@ -1,0 +1,10 @@
+forOrg,forProgram,forService,forCode,location,reqCode
+http://helpseeker.co/compass#Org10,http://helpseeker.co/compass#P10-1,http://helpseeker.co/compass#S10-1-Shelter,http://helpseeker.co/compass#CL-Shelter,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Female
+http://helpseeker.co/compass#Org10,http://helpseeker.co/compass#P10-1,http://helpseeker.co/compass#S10-1-Shelter,http://helpseeker.co/compass#CL-Shelter,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Homeless
+http://helpseeker.co/compass#Org10,http://helpseeker.co/compass#P10-1,http://helpseeker.co/compass#S10-1-Shelter,http://helpseeker.co/compass#CL-Shelter,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Youth
+http://helpseeker.co/compass#Org11,http://helpseeker.co/compass#P11-1,http://helpseeker.co/compass#S11-1-Food,http://helpseeker.co/compass#CL-Food,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Female
+http://helpseeker.co/compass#Org11,http://helpseeker.co/compass#P11-1,http://helpseeker.co/compass#S11-1-Food,http://helpseeker.co/compass#CL-Food,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Homeless
+http://helpseeker.co/compass#Org11,http://helpseeker.co/compass#P11-1,http://helpseeker.co/compass#S11-1-Food,http://helpseeker.co/compass#CL-Food,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Youth
+http://helpseeker.co/compass#Org11,http://helpseeker.co/compass#P11-3,http://helpseeker.co/compass#S11-3-Food,http://helpseeker.co/compass#CL-Food,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Female
+http://helpseeker.co/compass#Org11,http://helpseeker.co/compass#P11-3,http://helpseeker.co/compass#S11-3-Food,http://helpseeker.co/compass#CL-Food,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Homeless
+http://helpseeker.co/compass#Org11,http://helpseeker.co/compass#P11-3,http://helpseeker.co/compass#S11-3-Food,http://helpseeker.co/compass#CL-Food,http://helpseeker.co/compass#Area0_Location,http://helpseeker.co/compass#CL-Youth
