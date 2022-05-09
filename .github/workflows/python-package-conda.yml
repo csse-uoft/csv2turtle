@@ -18,7 +18,7 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        conda install pandas numpy xlsxwriter
+        conda install pandas numpy xlsxwriter openpyxl
     - name: Build
       run: |
         python3 csv_to_turtle.py
