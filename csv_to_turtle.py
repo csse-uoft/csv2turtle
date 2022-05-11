@@ -19,11 +19,11 @@ import xlsxwriter
 
 filein  = 'unit_tests_ieee.xlsx'
 # dirin = 'csv'
-dirin = '~/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
+dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 fileout = 'unit_tests_ieee.ttl'
 # fileout = 'unit_test3.ttl'
 # dirout = 'turtle'
-dirout = '~/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
+dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 
 class_map = {
     "Organization":"Organization",
@@ -85,12 +85,14 @@ prop_map = {
     'satisfiedStakeholder':'satisfiedStakeholder',
     'AtOrganization':'AtOrganization',
     'forReferral':'forReferral',
-    'occursAt':'act_50871:occursAt',
-    'previousEvent':'act_50871:previousEvent',
-    'nextEvent':'act_50871:nextEvent',
+    'occursAt':'occursAt',
+    'previousEvent':'previousEvent',
+    'nextEvent':'nextEvent',
     'hasBeginning':'time:hasBeginning',
     'hasEnd':'time:hasEnd',
     'hasTemporalDuration':'time:hasTemporalDuration',
+    'hasGender':'hasGender',
+
 }
 
 
@@ -189,7 +191,7 @@ def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
             code_text = entity_str(code_text)
             prop1 = entity_str(prop_map[prop0])
             text += "%s %s %s.\n"%(inst,prop1,code_text)
-            klass = entity_str(class_map['CompositeCharacteristic'])
+            klass = entity_str(class_map['  '])
             prop1 = entity_str(prop_map['hasPart'])
             codes = [entity_str('CL-%s'%(c)) for c in re.sub(r'[a-z:]*Comp\-CL\-','',code_text).split('_')]
             text1 = '; '.join(["%s %s"%(prop,c) for c in codes])
@@ -220,45 +222,11 @@ def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
 # Read main Ex ffle
 xls = pd.ExcelFile(dirin+'/'+filein)
 
-
-
-# stakeholders
-df = pd.read_excel(xls,'Stakeholders', header=1)
-df = df.dropna(how='all')
-sids = []
-for _,row in df.iterrows():
-    sids.append(row['Stakeholder'].split(','))
-sids = list(set(flatten(sids)))
-sids.sort()
+# collects skateholder definitions
 stakeholders = {}
-for sid in sids:
-    stakeholders[sid] = {'hasCode':[], "location":np.nan}
-for _,row in df.iterrows():
-    for sid in row['Stakeholder'].split(','):
-        if row['hasCode'] == row['hasCode']:
-            for code in [c.strip() for c in row['hasCode'].split(',')]:
-                stakeholders[sid]['hasCode'].append(code)
-        if row['location'] == row['location']:
-            stakeholders[sid]['location'] = row['location']
-for k,v in stakeholders.items():
-    stakeholders[k]['hasCode'] = list(set(v['hasCode']))
 
-# insert stakeholders
-text += "#####################\n# Stakeholders\n####################\n"
-for sid,props in stakeholders.items():
-    text += "\n# Stakeholder (%s)\n"%(sid)
-    sklass = entity_str(class_map["Stakeholder"])
-    sinst = entity_str(sid)
 
-    text += "%s rdf:type %s.\n"%(sinst, sklass)
-    prop = prop_map['locatedIn']
-    if props['location']== props['location']:
-        inst = entity_str(props['location'])
-        text += "%s %s %s.\n"%(sinst, prop, inst)
 
-    text += format_characteristics_text(sinst, props["hasCode"])
-
-    text += "\n"
 
 
 # insert Taxonomy and CodeList
@@ -592,7 +560,7 @@ for (sinst,ninst),grp in df.groupby(['Service','hasName']):
 
 
 
-xls = pd.ExcelFile(dirin+'/'+filein)
+# xls = pd.ExcelFile(dirin+'/'+filein)
 
 text += "#####################\n# ServiceEvents\n####################\n"
 df = pd.read_excel(xls,'ServiceEvents', header=1)
@@ -600,35 +568,113 @@ df = df.dropna(how='all')
 klass = entity_str(class_map['ServiceEvent'])
 for _,row in df.iterrows():
     
-    # satisfiedStakeholder
-    subj = entity_str(row['ServiceEvent'])
-    text += "%s rdf:type %s;\n"%(subj, klass)
+    seinst = entity_str(row['ServiceEvent'])
+    text += "%s rdf:type %s;\n"%(seinst, klass)
 
-    # strings, no naespace
+    # strings, no namespace
     for col in ['hasName','hasDescription']:
         if not pd.isna(row[col]):
-            inst = entity_str(row[col])
+            inst = row[col]
             prop = entity_str(prop_map[col])
-            text += " %s %s;\n"%(prop, inst)
+            text += "   %s \"%s\";\n"%(prop, inst)
 
     # annotations with namespace
     for col in ['hasStatus', 'forClient','AtOrganization','forReferral','hasLocation','previousEvent','nextEvent']:
         if not pd.isna(row[col]):
             inst = entity_str(row[col])
             prop = entity_str(prop_map[col])
-            text += " %s %s;\n"%(prop, inst)
+            text += "   %s %s;\n"%(prop, inst)
 
     # Dates with convertion: YYYY-CCYY-MM-DD HH:MM:SS to CCYY-MM-DDThh:mm:ss.sss
     for col in ['occursAt','hasBeginning', 'hasEnd']:
         inst = date_to_xsd(row[col])
         if not pd.isna(inst):
             prop = entity_str(prop_map[col])
-            text += " %s %s;\n"%(prop, inst)
+            text += "   %s \"%s\";\n"%(prop, inst)
         
 
     text += ".\n"
     text += "\n"
 
+
+
+xls = pd.ExcelFile(dirin+'/'+filein)
+
+text += "#####################\n# Cients\n####################\n"
+df = pd.read_excel(xls,'Clients', header=1)
+df = df.dropna(how='all')
+klass = entity_str(class_map['Client'])
+for _,row in df.iterrows():
+    # break    
+    cinst = entity_str(row['Client'])
+    text += "%s rdf:type %s;\n"%(cinst, klass)
+
+    # strings, with namespace
+    for col in ['hasGender']:
+        if not pd.isna(row[col]):
+            inst = entity_str(row[col])
+            prop = entity_str(prop_map[col])
+            text += "   %s \"%s\";\n"%(prop, inst)
+
+    # annotations with namespace
+    for col in ['hasStatus', 'forClient','AtOrganization','forReferral','hasLocation','previousEvent','nextEvent']:
+        if not pd.isna(row[col]):
+            inst = entity_str(row[col])
+            prop = entity_str(prop_map[col])
+            text += "   %s %s;\n"%(prop, inst)
+
+    # Dates with convertion: YYYY-CCYY-MM-DD HH:MM:SS to CCYY-MM-DDThh:mm:ss.sss
+    for col in ['occursAt','hasBeginning', 'hasEnd']:
+        inst = date_to_xsd(row[col])
+        if not pd.isna(inst):
+            prop = entity_str(prop_map[col])
+            text += "   %s \"%s\";\n"%(prop, inst)
+        
+
+    format_characteristics_text(lminst, format_lists(row['satisfiedStakeholder'],entity=False))
+    text += ".\n"
+    text += "\n"
+
+
+
+
+# stakeholders
+df = pd.read_excel(xls,'Stakeholders', header=1)
+df = df.dropna(how='all')
+sids = []
+for _,row in df.iterrows():
+    sids.append(row['Stakeholder'].split(','))
+sids = list(set(flatten(sids)))
+sids.sort()
+stakeholders = {}
+for sid in sids:
+    stakeholders[sid] = {'hasCode':[], "location":np.nan}
+for _,row in df.iterrows():
+    for sid in row['Stakeholder'].split(','):
+        if row['hasCode'] == row['hasCode']:
+            for code in [c.strip() for c in row['hasCode'].split(',')]:
+                stakeholders[sid]['hasCode'].append(code)
+        if row['location'] == row['location']:
+            stakeholders[sid]['location'] = row['location']
+for k,v in stakeholders.items():
+    stakeholders[k]['hasCode'] = list(set(v['hasCode']))
+
+# insert stakeholders
+text += "#####################\n# Stakeholders\n####################\n"
+for sid,props in stakeholders.items():
+    text += "\n# Stakeholder (%s)\n"%(sid)
+    sklass = entity_str(class_map["Stakeholder"])
+    sinst = entity_str(sid)
+
+    text += "%s rdf:type %s.\n"%(sinst, sklass)
+    prop = prop_map['locatedIn']
+    if props['location']== props['location']:
+        inst = entity_str(props['location'])
+        text += "%s %s %s.\n"%(sinst, prop, inst)
+
+    text += format_characteristics_text(sinst, props["hasCode"])
+
+    text += "\n"
 
 
 
