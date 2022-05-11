@@ -17,10 +17,13 @@ import pandas as pd
 
 import xlsxwriter
 
-filein  = 'unit_tests3.xlsx'
-dirin = 'csv'
-fileout = 'unit_test3.ttl'
-dirout = 'turtle'
+filein  = 'unit_tests_ieee.xlsx'
+# dirin = 'csv'
+dirin = '~/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
+fileout = 'unit_tests_ieee.ttl'
+# fileout = 'unit_test3.ttl'
+# dirout = 'turtle'
+dirout = '~/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 
 class_map = {
     "Organization":"Organization",
@@ -41,7 +44,8 @@ class_map = {
     'CommunityCharacteristic':'CommunityCharacteristic',
     'LandArea':'LandArea',
     'Feature':'loc_50871:Feature',
-    'OrganizationID':'org:OrganizationID'
+    'OrganizationID':'org:OrganizationID',
+    'ServiceEvent':'ServiceEvent',
 }
 prop_map = {
     'hasLegalName':'org:hasLegalName',
@@ -76,6 +80,17 @@ prop_map = {
     'hasOutcome':'cids:hasOutcome',
     'hasID':'org:hasID',
     'hasNumber':'hasNumber',
+    'hasStatus':'hasStatus',
+    'forClient':'hasClient',
+    'satisfiedStakeholder':'satisfiedStakeholder',
+    'AtOrganization':'AtOrganization',
+    'forReferral':'forReferral',
+    'occursAt':'act_50871:occursAt',
+    'previousEvent':'act_50871:previousEvent',
+    'nextEvent':'act_50871:nextEvent',
+    'hasBeginning':'time:hasBeginning',
+    'hasEnd':'time:hasEnd',
+    'hasTemporalDuration':'time:hasTemporalDuration',
 }
 
 
@@ -128,6 +143,15 @@ text += '''
 
 '''
 
+def date_to_xsd(s):
+    d = None
+    if s is None or s != s:
+        return s
+    elif type(s) is  pd._libs.tslibs.timestamps.Timestamp:
+        d = s
+    elif type(s) is str:
+        d = datetime.fromisoformat(s)
+    return d.strftime("%Y-%m-%dT%H:%M:%S.000")
 def entity_str(e,prefix=PREFIX):
     e=e.strip()
     return e if ':' in e else "%s:%s"%(prefix,e)
@@ -565,6 +589,46 @@ for (sinst,ninst),grp in df.groupby(['Service','hasName']):
 
 
     text += "\n"
+
+
+
+xls = pd.ExcelFile(dirin+'/'+filein)
+
+text += "#####################\n# ServiceEvents\n####################\n"
+df = pd.read_excel(xls,'ServiceEvents', header=1)
+df = df.dropna(how='all')
+klass = entity_str(class_map['ServiceEvent'])
+for _,row in df.iterrows():
+    
+    # satisfiedStakeholder
+    subj = entity_str(row['ServiceEvent'])
+    text += "%s rdf:type %s;\n"%(subj, klass)
+
+    # strings, no naespace
+    for col in ['hasName','hasDescription']:
+        if not pd.isna(row[col]):
+            inst = entity_str(row[col])
+            prop = entity_str(prop_map[col])
+            text += " %s %s;\n"%(prop, inst)
+
+    # annotations with namespace
+    for col in ['hasStatus', 'forClient','AtOrganization','forReferral','hasLocation','previousEvent','nextEvent']:
+        if not pd.isna(row[col]):
+            inst = entity_str(row[col])
+            prop = entity_str(prop_map[col])
+            text += " %s %s;\n"%(prop, inst)
+
+    # Dates with convertion: YYYY-CCYY-MM-DD HH:MM:SS to CCYY-MM-DDThh:mm:ss.sss
+    for col in ['occursAt','hasBeginning', 'hasEnd']:
+        inst = date_to_xsd(row[col])
+        if not pd.isna(inst):
+            prop = entity_str(prop_map[col])
+            text += " %s %s;\n"%(prop, inst)
+        
+
+    text += ".\n"
+    text += "\n"
+
 
 
 
