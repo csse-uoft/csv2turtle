@@ -64,13 +64,13 @@ prop_map = {
     'hasLandArea':'landuse_50872:hasLandArea',
     'hasIdentifier':'org:hasIdentifier',
     'hasStakeholder':'cids:hasStakeholder',
-    'hasName':'cids:hasName',
+    'hasName':'hasName',
     'hasPart':'oep:hasPart',
     'hasDescription':'cids:hasDescription',
     'hasContributingStakeholder':'cids:hasContributingStakeholder',
     'hasBeneficialStakeholder':'cids:hasBeneficialStakeholder',
     'partOf':'oep:partOf',
-    'hasMode':'cp:hasMode',
+    'hasMode':'hasMode',
     'forOrganization':'cids:forOrganization',
     'hasIndicator':'cids:hasIndicator',
     'hasOutcome':'cids:hasOutcome',
@@ -241,19 +241,16 @@ for sid,props in stakeholders.items():
 text += "#####################\n# Taxonomies\n####################\n"
 df = pd.read_excel(xls,'Taxonomies', header=1)
 df = df.dropna(how='all')
-for _,row in df.iterrows():
-    subj, obj = entity_str(row['Class']),entity_str(row['subClassOf'])
-    text += "%s rdfs:subClassOf %s.\n"%(subj, obj)
+for (klass, subclass),grp in df.groupby(['Class','subClassOf'], dropna=False):
+    if not pd.isnull(subclass):
+        text += "\n"
+        subj, obj = entity_str(klass),entity_str(subclass)
+        text += "%s rdfs:subClassOf %s.\n"%(subj, obj)
 
-    if row['Instance'] == row['Instance']:
-        subj, obj = entity_str(row['Instance']), entity_str(row['Class'])
-        text += "%s rdf:type %s;\n"%(subj,obj)
-
-        obj = entity_str(row['CodeValue'])
-        prop = prop_map['hasCode']
-        text += "   %s %s;\n"%(prop, obj)
-        text += ".\n"
-    text += "\n"
+    if grp['Instance'].any():
+        for _,row in grp.iterrows():
+            subj, obj = entity_str(row['Instance']), entity_str(row['Class'])
+            text += "%s rdf:type %s.\n"%(subj,obj)
 
 
 # Communities
@@ -544,8 +541,8 @@ for (sinst,ninst),grp in df.groupby(['Service','hasName']):
         text += "   %s %s;\n"%(prop,', '.join(insts))
 
     insts = format_lists(grp["hasMode"], entity=False)
-    insts = ["\"%s\""%(t) for t in insts]
-    prop = prop_map['hasMode']
+    insts = [entity_str(t) for t in insts]
+    prop = entity_str(prop_map['hasMode'])
     if len(insts)==1:
         text += "   %s %s;\n"%(prop, insts[0])
     elif len(insts)>1:
