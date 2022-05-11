@@ -503,8 +503,6 @@ df = pd.read_excel(xls,'Services', header=1)
 df = df.dropna(how='all')
 klass = entity_str(class_map["Service"])
 for (sinst,ninst),grp in df.groupby(['Service','hasName']):
-    if sinst == 'S12-3-Education':
-        break
     #################################################
     # generate Program Class and links for Service to Program to and Code
     sinst = entity_str(sinst)
