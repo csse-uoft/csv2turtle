@@ -25,17 +25,17 @@ class CharacterisrticParamException(Exception):
     """Raised when the incorrect format of characteristics is passed"""
     pass
 
-filein  = 'unit_tests_ieee.xlsx'
-dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
-fileout = 'unit_tests_ieee.ttl'
-dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
+# filein  = 'unit_tests_ieee.xlsx'
+# dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
+# fileout = 'unit_tests_ieee.ttl'
+# dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 
 # file_date = datetime.now().strftime("%B %d, %Y %H:%M:%S")
 file_date = datetime.now().strftime("%B %Y Release")
-# filein  = 'unit_tests3.xlsx'
-# dirin = 'csv'
-# fileout = 'unit_test3.ttl'
-# dirout = 'turtle'
+filein  = 'unit_tests3.xlsx'
+dirin = 'csv'
+fileout = 'unit_test3.ttl'
+dirout = 'turtle'
 
 class_map = {
     "Organization":"Organization",
@@ -264,7 +264,7 @@ COLLECT_NAMED_CHARS = {}
 try:
     text += "#####################\n# Taxonomies\n####################\n"
     df = pd.read_excel(xls,'Taxonomies', header=1)
-    df = df.dropna(how='all')
+    df = df.drop_duplicates().dropna(how='all')
     for (klass, subclass),grp in df.groupby(['Class','subClassOf'], dropna=False):
         if not pd.isnull(subclass):
             text += "\n"
@@ -289,7 +289,7 @@ if not IGNORE_COMM_SHEET:
     try:
         # Communities
         df = pd.read_excel(xls,'Communities', header=1)
-        df = df.dropna(how='all')
+        df = df.drop_duplicates().dropna(how='all')
         communities = {}
         for _,row in df[~df['Community'].isnull()].iterrows():
             comm = row['Community']
@@ -359,7 +359,7 @@ if not IGNORE_COMM_SHEET:
 try:
     text += "#####################\n# Organizations\n####################\n"
     df = pd.read_excel(xls,'Organizations', header=1)
-    df = df.dropna(how='all')
+    df = df.drop_duplicates().dropna(how='all')
     klass = entity_str(class_map["Organization"])
     for _,row in df.iterrows():
         idinst = row['hasID']
@@ -412,7 +412,7 @@ except ValueError as e:
 try:
     text += "#####################\n# Funding\n####################\n"
     df = pd.read_excel(xls,'Funding', header=1)
-    df = df.dropna(how='all')
+    df = df.drop_duplicates().dropna(how='all')
     klass = entity_str(class_map["Funding"])
 
     for (finst, receivedFrom, fundersProgram, receivedAmount, requestedAmount),grp in df.groupby(['Funding','receivedFrom','fundersProgram','receivedAmount','requestedAmount']):
@@ -464,7 +464,7 @@ except ValueError as e:
 try:
     text += "#####################\n# Logic Models\n####################\n"
     df = pd.read_excel(xls,'LogicModels', header=1)
-    df = df.dropna(how='all')
+    df = df.drop_duplicates().dropna(how='all')
     klass = entity_str(class_map["LogicModel"])
     for (lminst, ninst),grp in df.groupby(['LogicModel','hasName']):
         lminst = entity_str(lminst)
@@ -515,7 +515,7 @@ except ValueError as e:
 try:
     text += "#####################\n# Programs\n####################\n"
     df = pd.read_excel(xls,'Programs', header=1)
-    df = df.dropna(how='all')
+    df = df.drop_duplicates().dropna(how='all')
     klass = entity_str(class_map["Program"])
     for (pinst,ninst),grp in df.groupby(['Program','hasName']):
         #################################################
@@ -565,7 +565,7 @@ except ValueError as e:
 try:
     text += "#####################\n# Services\n####################\n"
     df = pd.read_excel(xls,'Services', header=1)
-    df = df.dropna(how='all')
+    df = df.drop_duplicates().dropna(how='all')
     klass = entity_str(class_map["Service"])
     for (sinst,ninst),grp in df.groupby(['Service','hasName']):
         #################################################
@@ -644,7 +644,7 @@ except ValueError as e:
 try:
     text += "#####################\n# ServiceEvents\n####################\n"
     df = pd.read_excel(xls,'ServiceEvents', header=1)
-    df = df.dropna(how='all')
+    df = df.drop_duplicates().dropna(how='all')
     klass = entity_str(class_map['ServiceEvent'])
     for _,row in df.iterrows():
         
@@ -685,7 +685,7 @@ except ValueError as e:
 try:
     text += "#####################\n# Clients\n####################\n"
     df = pd.read_excel(xls,'Clients', header=1)
-    df = df.dropna(how='all')
+    df = df.drop_duplicates().dropna(how='all')
     klass = entity_str(class_map['Client'])
     for _,row in df.iterrows():
         # break    
@@ -744,7 +744,7 @@ for sids in COLLECT_STAKEHOLDERS:
 if not IGNORE_SH_SHEET:
     try:
         df = pd.read_excel(xls,'Stakeholders', header=1)
-        df = df.dropna(how='all')
+        df = df.drop_duplicates().dropna(how='all')
         sids = []
         for _,row in df.iterrows():
             sids.append(row['Stakeholder'].split(','))
