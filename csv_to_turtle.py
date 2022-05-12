@@ -21,11 +21,18 @@ class CompositeCharacteristicException(Exception):
     """Raised when CompositeCharacteristic has less than 2 codes"""
     pass
 
+class CharacterisrticParamException(Exception):
+    """Raised when the incorrect format of characteristics is passed"""
+    pass
 filein  = 'unit_tests_ieee.xlsx'
 dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 fileout = 'unit_tests_ieee.ttl'
 dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 
+
+file_date = "May 11, 2022 22:15:38"
+
+# file_date = datetime.now().strftime("%B %d, %Y %H:%M:%S")
 # filein  = 'unit_tests3.xlsx'
 # dirin = 'csv'
 # fileout = 'unit_test3.ttl'
@@ -88,7 +95,7 @@ prop_map = {
     'hasNumber':'hasNumber',
     'hasStatus':'hasStatus',
     'forClient':'forClient',
-    'satisfiedStakeholder':'satisfiedStakeholder',
+    'satisfiesStakeholder':'satisfiesStakeholder',
     'AtOrganization':'AtOrganization',
     'forReferral':'forReferral',
     'occursAt':'occursAt',
@@ -129,7 +136,7 @@ text = '''
 # Date : %s
 # github: https://github.com/csse-uoft/csv2turtle
 ################################################################
-'''%(datetime.now().strftime("%B %d, %Y %H:%M:%S"))
+'''%(file_date)
 text += '''
 @prefix act:  <http://ontology.eil.utoronto.ca/tove/activity#>.
 @prefix dcat: <http://www.w3.org/ns/dcat#>.
@@ -188,11 +195,12 @@ def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
     text = ''
     if type(chars) == str:
         tmp = [c.strip() for c in chars.split(',')]
-
     elif type(chars) == list:
         tmp = chars
+    elif pd.isnull(chars):
+        return text
     else:
-        raise ValueError("chars parameter must be a str or a list")
+        raise CharacterisrticParamException("chars parameter must be a str or a list \n\tpassed (%s)\n\tfor (%s)"%(chars, inst))
 
     for code_text in tmp:
         if code_text != code_text:
@@ -201,21 +209,22 @@ def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
             code_text = code_text.replace('cids:hasCode ','')
         prop = entity_str(prop_map['hasCode'])
         text1 = None
-        if code_text.startswith('Comp-CL-'):
+        if code_text.startswith('Comp-INST-'):
             # providing list of composite char labels
             code_text = entity_str(code_text)
             prop1 = entity_str(prop_map[prop0])
             text += "%s %s %s.\n"%(inst,prop1,code_text)
             klass = entity_str(class_map['CompositeCharacteristic'])
             prop1 = entity_str(prop_map['hasPart'])
-            codes = [entity_str('CL-%s'%(c)) for c in re.sub(r'[a-z:]*Comp\-CL\-','',code_text).split('-')]
+            codes = [entity_str('INST-%s'%(c)) for c in re.sub(r'[a-z:]*Comp\-INST\-','',code_text).split('-')]
             if len(codes) < 2:
                 raise CompositeCharacteristicException("CompositeCharacteristic has less than 2 parts (%s)"%(code_text))
             text1 = '; '.join(["%s %s"%(prop,c) for c in codes])
-            text += "%s rdf:type %s.\n"%(code_text,klass)
-            COLLECT_NAMED_CHARS[code_text] = "%s %s [%s].\n"%(code_text,prop1,text1)
+            # text += "%s rdf:type %s.\n"%(code_text,klass)
             # text += "%s %s [%s].\n"%(code_text,prop1,text1)
-        elif code_text.startswith('CL-'):
+            COLLECT_NAMED_CHARS[code_text] = "%s rdf:type %s.\n"%(code_text,klass)
+            COLLECT_NAMED_CHARS[code_text] += "%s %s [%s].\n"%(code_text,prop1,text1)
+        elif code_text.startswith('INST-'):
             # providing list of codes
             codes = [entity_str(c.strip()) for c in code_text.split(',')]
             codes.sort()
@@ -226,15 +235,16 @@ def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
                 text += "%s %s [%s %s].\n"%(inst,prop1,prop,code)
 
             elif len(codes) > 1:
-                comp_inst = entity_str('Comp-CL-'+'-'.join([re.sub(r'[a-z:]*CL-','',c) for c in codes]))
+                comp_inst = entity_str('Comp-INST-'+'-'.join([re.sub(r'[a-z:]*INST-','',c) for c in codes]))
                 klass = entity_str(class_map['CompositeCharacteristic'])
                 prop1 = entity_str(prop_map['hasPart'])
                 prop0 = entity_str(prop_map[prop0])
                 text1 = '; '.join(["%s %s"%(prop,c) for c in codes])
-                text += "%s rdf:type %s.\n"%(comp_inst,klass)
-                text += "%s %s [%s].\n"%(comp_inst,prop1,text1)
+                # text += "%s rdf:type %s.\n"%(comp_inst,klass)
+                # text += "%s %s [%s].\n"%(comp_inst,prop1,text1)
                 text += "%s %s %s.\n"%(inst, prop0, comp_inst)
-                COLLECT_NAMED_CHARS[comp_inst] = "%s %s [%s].\n"%(comp_inst,prop1,text1)
+                COLLECT_NAMED_CHARS[comp_inst] = "%s rdf:type %s.\n"%(comp_inst,klass)
+                COLLECT_NAMED_CHARS[comp_inst] += "%s %s [%s].\n"%(comp_inst,prop1,text1)
 
 
     return text
@@ -269,75 +279,86 @@ try:
 except ValueError as e:
     print(e)
 
+
+##########################################################
+# Get Communities
+# to get communities fro collected stakeholders, 
+# set IGNORE_COMM_SHEET = True
+##########################################################
+IGNORE_COMM_SHEET = False
+if not IGNORE_COMM_SHEET:
+    try:
+        # Communities
+        df = pd.read_excel(xls,'Communities', header=1)
+        df = df.dropna(how='all')
+        communities = {}
+        for _,row in df[~df['Community'].isnull()].iterrows():
+            comm = row['Community']
+            communities[comm] = {}
+            chars = []
+            if not pd.isnull(row['CommunityCharacteristic']):
+                for s in [s.strip() for s in row['CommunityCharacteristic'].split(',')]:
+                    chars.append(s)
+            communities[comm]['CommunityCharacteristic'] = list(set(chars))
+            communities[comm]['hasNumber'] = row['hasNumber']
+            communities[comm]['hasLandArea'] = row['hasLandArea']
+            communities[comm]['parcelHasLocation'] = row['parcelHasLocation']
+
+        # CityDivition
+        # cp:Community subClassOf iso5087-2:CityDivision
+        # ios5087-2:CityDivision iso5087 hasLandArea iso5087-2:LandArea
+        # iso587-2:LandArea subClassOf iso5078-1:Manifestation
+        #                 landuse_50872:hasLocation exactly 1 iso5087-1:Feature
+        # isoFeature subClassOf loc:Feature
+        # >>>>>> If Feauter was geo:Feature we woudl use the gml:hasIdentifier
+        #         isoFeature subClassOf geo:Feature
+        #         geo:Feature gml:identifier "Area1"
+        text += "#####################\n# Communities\n####################\n"
+        for comm, props in communities.items():
+            inst = entity_str(comm)
+            klass = entity_str(class_map['Community'])
+            text += "%s rdf:type %s.\n"%(inst,klass)
+
+            if props['hasNumber'] == props['hasNumber']:
+                num = float(props['hasNumber'])
+                prop = entity_str(prop_map['hasNumber'])
+                text += "%s %s %s.\n"%(inst,prop,num)
+
+            land = entity_str(props['hasLandArea'])
+            prop = entity_str(prop_map['hasLandArea'])
+            text += "%s %s %s.\n"%(inst,prop,land)
+        
+            laklass = entity_str(class_map['LandArea'])
+            text += "%s rdf:type %s;\n"%(land,laklass)
+            parcel = entity_str(props['parcelHasLocation'])
+            prop = 'landuse_50872:parcelHasLocation'
+            text += "   %s %s.\n"%(prop, parcel)
+
+            fklass = entity_str(class_map['Feature'])
+            text += "%s rdf:type %s.\n"%(parcel, fklass)
+
+            if props['CommunityCharacteristic'] == props['CommunityCharacteristic'] and len(props['CommunityCharacteristic'])>0:
+                # Community Char
+                cklass = entity_str(class_map['CommunityCharacteristic'])
+                compchar_inst = entity_str("%s_CommunityCharacteristic"%(inst))
+                text += "%s rdf:type %s.\n"%(compchar_inst, cklass)
+                prop = entity_str(prop_map['hasCommunityCharacteristic'])
+                text += "%s %s %s.\n"%(inst, prop, compchar_inst)
+                # Characteristic
+                char_inst = entity_str("%s_Characteristic"%(inst))
+                prop = entity_str(prop_map['hasCharacteristic'])
+                text += "%s %s %s.\n"%(compchar_inst, prop,char_inst)
+                text += format_characteristics_text(char_inst, [','.join(props['CommunityCharacteristic'])])
+
+
+            text += "\n\n"
+    except ValueError as e:
+        print(e)
+
+#####################################################
+# Org properties
+#####################################################
 try:
-    # Communities
-    df = pd.read_excel(xls,'Communities', header=1)
-    df = df.dropna(how='all')
-    communities = {}
-    for _,row in df[~df['Community'].isnull()].iterrows():
-        comm = row['Community']
-        communities[comm] = {}
-        chars = []
-        for s in [s.strip() for s in row['CommunityCharacteristic'].split(',')]:
-            chars.append(s)
-        communities[comm]['CommunityCharacteristic'] = list(set(chars))
-        communities[comm]['hasNumber'] = row['hasNumber']
-        communities[comm]['hasLandArea'] = row['hasLandArea']
-        communities[comm]['parcelHasLocation'] = row['parcelHasLocation']
-
-    # CityDivition
-    # cp:Community subClassOf iso5087-2:CityDivision
-    # ios5087-2:CityDivision iso5087 hasLandArea iso5087-2:LandArea
-    # iso587-2:LandArea subClassOf iso5078-1:Manifestation
-    #                 landuse_50872:hasLocation exactly 1 iso5087-1:Feature
-    # isoFeature subClassOf loc:Feature
-    # >>>>>> If Feauter was geo:Feature we woudl use the gml:hasIdentifier
-    #         isoFeature subClassOf geo:Feature
-    #         geo:Feature gml:identifier "Area1"
-    text += "#####################\n# Communities\n####################\n"
-    for comm, props in communities.items():
-        inst = entity_str(comm)
-        klass = entity_str(class_map['Community'])
-        text += "%s rdf:type %s.\n"%(inst,klass)
-
-        if props['hasNumber'] == props['hasNumber']:
-            num = float(props['hasNumber'])
-            prop = entity_str(prop_map['hasNumber'])
-            text += "%s %s %s.\n"%(inst,prop,num)
-
-        land = entity_str(props['hasLandArea'])
-        prop = entity_str(prop_map['hasLandArea'])
-        text += "%s %s %s.\n"%(inst,prop,land)
-    
-        laklass = entity_str(class_map['LandArea'])
-        text += "%s rdf:type %s;\n"%(land,laklass)
-        parcel = entity_str(props['parcelHasLocation'])
-        prop = 'landuse_50872:parcelHasLocation'
-        text += "   %s %s.\n"%(prop, parcel)
-
-        fklass = entity_str(class_map['Feature'])
-        text += "%s rdf:type %s.\n"%(parcel, fklass)
-
-        # Community Char
-        cklass = entity_str(class_map['CommunityCharacteristic'])
-        compchar_inst = entity_str("%s_CommunityCharacteristic"%(inst))
-        text += "%s rdf:type %s.\n"%(compchar_inst, cklass)
-        prop = entity_str(prop_map['hasCommunityCharacteristic'])
-        text += "%s %s %s.\n"%(inst, prop, compchar_inst)
-
-        # Characteristic
-        char_inst = entity_str("%s_Characteristic"%(inst))
-        prop = entity_str(prop_map['hasCharacteristic'])
-        text += "%s %s %s.\n"%(compchar_inst, prop,char_inst)
-        text += format_characteristics_text(char_inst, [','.join(props['CommunityCharacteristic'])])
-
-        text += "\n\n"
-except ValueError as e:
-    print(e)
-
-
-try:
-    # Org properties
     text += "#####################\n# Organizations\n####################\n"
     df = pd.read_excel(xls,'Organizations', header=1)
     df = df.dropna(how='all')
@@ -387,7 +408,9 @@ except ValueError as e:
     print(e)
 
 
-
+#####################################################
+# Funding
+#####################################################
 try:
     text += "#####################\n# Funding\n####################\n"
     df = pd.read_excel(xls,'Funding', header=1)
@@ -437,9 +460,10 @@ try:
 except ValueError as e:
     print(e)
 
-
+#####################################################
+# Logic Models
+#####################################################
 try:
-    # Logic Models
     text += "#####################\n# Logic Models\n####################\n"
     df = pd.read_excel(xls,'LogicModels', header=1)
     df = df.dropna(how='all')
@@ -486,8 +510,11 @@ try:
 except ValueError as e:
     print(e)
 
+
+#####################################################
+# Programs
+#####################################################
 try:
-    # Programs
     text += "#####################\n# Programs\n####################\n"
     df = pd.read_excel(xls,'Programs', header=1)
     df = df.dropna(how='all')
@@ -534,6 +561,9 @@ try:
 except ValueError as e:
     print(e)
 
+#####################################################
+# Services
+#####################################################
 try:
     text += "#####################\n# Services\n####################\n"
     df = pd.read_excel(xls,'Services', header=1)
@@ -610,7 +640,9 @@ except ValueError as e:
     print(e)
 
 
-
+#####################################################
+# ServiceEvents
+#####################################################
 try:
     text += "#####################\n# ServiceEvents\n####################\n"
     df = pd.read_excel(xls,'ServiceEvents', header=1)
@@ -649,8 +681,11 @@ except ValueError as e:
     print(e)
 
 
+#####################################################
+# Clients
+#####################################################
 try:
-    text += "#####################\n# Cients\n####################\n"
+    text += "#####################\n# Clients\n####################\n"
     df = pd.read_excel(xls,'Clients', header=1)
     df = df.dropna(how='all')
     klass = entity_str(class_map['Client'])
@@ -667,7 +702,7 @@ try:
                 text += "   %s \"%s\";\n"%(prop, inst)
 
         # annotations with namespace
-        for col in ['hasIdentifier','satisfiedStakeholder','hasGender','hasSex','hasIncome','hasSkill','hasEthnicity','memberOfAboriginalGroup','hasReligion','hasDependent','schema:knowsLanguage','hasOutcome','hasNeed','hasGoal','hasProblem','hasStatus','hasClientState']:
+        for col in ['hasIdentifier','satisfiesStakeholder','hasGender','hasSex','hasIncome','hasSkill','hasEthnicity','memberOfAboriginalGroup','hasReligion','hasDependent','schema:knowsLanguage','hasOutcome','hasNeed','hasGoal','hasProblem','hasStatus','hasClientState']:
             if not pd.isna(row[col]):
                 inst = entity_str(row[col])
                 prop = entity_str(prop_map[col])
@@ -676,14 +711,20 @@ try:
         text += ".\n"
         text += "\n"
 
-        COLLECT_STAKEHOLDERS.append(row['satisfiedStakeholder'])
+        COLLECT_STAKEHOLDERS.append(row['satisfiesStakeholder'])
 except ValueError as e:
     print(e)
 
 
 ########################################################
-# collect and write Stakeholder defintions to text file
+# Collect and write Stakeholder defintions to text file
 ########################################################
+# To ignore the strakeholder sheet, you can collect the ones found in other sheets.
+# If you want to add the collected stakeholders into the sheet, 
+# then import the printed output into the sheet, and replace existing content
+#      set IGNORE_SH_SHEET = True
+IGNORE_SH_SHEET = False
+
 stakeholders = {}
 # get stakeholders collected form other sheets
 for sids in COLLECT_STAKEHOLDERS:
@@ -696,38 +737,41 @@ for sids in COLLECT_STAKEHOLDERS:
         chars.sort()
         stakeholders[sid] = {'hasCode':[], "location":np.nan}
         if len(chars) > 0:
-            stakeholders[sid]['hasCode'] = ['CL-%s'%(char) for char in chars]
+            stakeholders[sid]['hasCode'] = ['INST-%s'%(char) for char in chars]
         if len(areas) > 0:
             stakeholders[sid]['location'] = areas[0].replace('in_','') + '_Location'
         
 
-# get stakeholders from 'Stakeholders' sheet
-try:
-    df = pd.read_excel(xls,'Stakeholders', header=1)
-    df = df.dropna(how='all')
-    sids = []
-    for _,row in df.iterrows():
-        sids.append(row['Stakeholder'].split(','))
-    sids = list(set(flatten(sids)))
-    sids.sort()
-except ValueError as e:
-    print(e)
+# Get stakeholders from 'Stakeholders' sheet
+if not IGNORE_SH_SHEET:
+    try:
+        df = pd.read_excel(xls,'Stakeholders', header=1)
+        df = df.dropna(how='all')
+        sids = []
+        for _,row in df.iterrows():
+            sids.append(row['Stakeholder'].split(','))
+        sids = list(set(flatten(sids)))
+        sids.sort()
 
 
-# initialize any stakeholdes that have not been found already
-for sid in sids:
-    sid = entity_str(sid)
-    if sid not in stakeholders.keys():
-        stakeholders[sid] = {'hasCode':[], "location":np.nan}
-for _,row in df.iterrows():
-    for sid in row['Stakeholder'].split(','):
-        sid = entity_str(sid)
-        if stakeholders[sid]['hasCode'] == []:
-            if row['hasCode'] == row['hasCode']:
-                for code in [c.strip() for c in row['hasCode'].split(',')]:
-                    stakeholders[sid]['hasCode'].append(code)
-        if pd.isnull(stakeholders[sid]['location']) and not pd.isnull(row['location']):
-            stakeholders[sid]['location'] = row['location']
+        # initialize any stakeholdes that have not been found already
+        for sid in sids:
+            sid = entity_str(sid)
+            if sid not in stakeholders.keys():
+                stakeholders[sid] = {'hasCode':[], "location":np.nan}
+        for _,row in df.iterrows():
+            for sid in row['Stakeholder'].split(','):
+                sid = entity_str(sid)
+                if stakeholders[sid]['hasCode'] == []:
+                    if row['hasCode'] == row['hasCode']:
+                        for code in [c.strip() for c in row['hasCode'].split(',')]:
+                            stakeholders[sid]['hasCode'].append(code)
+                if pd.isnull(stakeholders[sid]['location']) and not pd.isnull(row['location']):
+                    stakeholders[sid]['location'] = row['location']
+    except ValueError as e:
+        print(e)
+
+# sort codes for all stakeholders
 for k,v in stakeholders.items():
     stakeholders[k]['hasCode'] = list(set(v['hasCode']))
     stakeholders[k]['hasCode'].sort()
@@ -749,11 +793,33 @@ for sid,props in stakeholders.items():
 
     text += "\n"
 
-# write out collected named Characterisitcs, e.g. CompositeCharacteristics
+if IGNORE_SH_SHEET:
+    for k,v in stakeholders.items():
+        print("\"%s\",\"%s\",\"%s\""%(k.split(':')[1],','.join(v['hasCode']),v['location']))
+
+
+if IGNORE_COMM_SHEET:
+    for k,v in stakeholders.items():
+        Community = k.split(':')[1].replace('sh-','')
+        tmp = Community.split('-in_')
+        if len(tmp)==1:
+            Community = tmp[0].replace('in_','')
+        else:
+            Community = '-'.join(tmp[::-1])
+        CommunityCharacteristic = v['hasCode']
+        parcelHasLocation = v['location']
+        hasLandArea = parcelHasLocation.replace('_Location', '_Land_Area')
+        print("\"%s\",\"%s\",\"\",\"%s\",\"%s\""%(Community, ','.join(CommunityCharacteristic),hasLandArea, parcelHasLocation))
+
+# write out collected named Characteristics, e.g. CompositeCharacteristic
 text += "#####################\n# Named Charcteristics\n####################\n"
 for k,v in COLLECT_NAMED_CHARS.items():
     text += v+"\n"
 
+
+#######################################################################
+# Write ttl content to file
+#######################################################################
 f = open(dirout+'/'+fileout, "w")
 f.write(text)
 f.close()
