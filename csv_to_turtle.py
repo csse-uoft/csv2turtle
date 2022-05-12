@@ -24,15 +24,14 @@ class CompositeCharacteristicException(Exception):
 class CharacterisrticParamException(Exception):
     """Raised when the incorrect format of characteristics is passed"""
     pass
+
 filein  = 'unit_tests_ieee.xlsx'
 dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 fileout = 'unit_tests_ieee.ttl'
 dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 
-
-file_date = "May 11, 2022 22:15:38"
-
 # file_date = datetime.now().strftime("%B %d, %Y %H:%M:%S")
+file_date = datetime.now().strftime("%B %Y Release")
 # filein  = 'unit_tests3.xlsx'
 # dirin = 'csv'
 # fileout = 'unit_test3.ttl'
@@ -319,11 +318,6 @@ if not IGNORE_COMM_SHEET:
             klass = entity_str(class_map['Community'])
             text += "%s rdf:type %s.\n"%(inst,klass)
 
-            if props['hasNumber'] == props['hasNumber']:
-                num = float(props['hasNumber'])
-                prop = entity_str(prop_map['hasNumber'])
-                text += "%s %s %s.\n"%(inst,prop,num)
-
             land = entity_str(props['hasLandArea'])
             prop = entity_str(prop_map['hasLandArea'])
             text += "%s %s %s.\n"%(inst,prop,land)
@@ -337,19 +331,23 @@ if not IGNORE_COMM_SHEET:
             fklass = entity_str(class_map['Feature'])
             text += "%s rdf:type %s.\n"%(parcel, fklass)
 
+            # Community Char
+            cklass = entity_str(class_map['CommunityCharacteristic'])
+            compchar_inst = entity_str("%s_CommunityCharacteristic"%(inst))
+            text += "%s rdf:type %s.\n"%(compchar_inst, cklass)
+            prop = entity_str(prop_map['hasCommunityCharacteristic'])
+            text += "%s %s %s.\n"%(inst, prop, compchar_inst)
+            # Characteristic
+            # char_inst = entity_str("%s_Characteristic"%(inst))
+            # prop = entity_str(prop_map['hasCharacteristic'])
+            # text += "%s %s %s.\n"%(compchar_inst, prop,char_inst)
             if props['CommunityCharacteristic'] == props['CommunityCharacteristic'] and len(props['CommunityCharacteristic'])>0:
-                # Community Char
-                cklass = entity_str(class_map['CommunityCharacteristic'])
-                compchar_inst = entity_str("%s_CommunityCharacteristic"%(inst))
-                text += "%s rdf:type %s.\n"%(compchar_inst, cklass)
-                prop = entity_str(prop_map['hasCommunityCharacteristic'])
-                text += "%s %s %s.\n"%(inst, prop, compchar_inst)
-                # Characteristic
-                char_inst = entity_str("%s_Characteristic"%(inst))
-                prop = entity_str(prop_map['hasCharacteristic'])
-                text += "%s %s %s.\n"%(compchar_inst, prop,char_inst)
-                text += format_characteristics_text(char_inst, [','.join(props['CommunityCharacteristic'])])
+                text += format_characteristics_text(compchar_inst, [','.join(props['CommunityCharacteristic'])])
 
+            if props['hasNumber'] == props['hasNumber']:
+                num = float(props['hasNumber'])
+                prop = entity_str(prop_map['hasNumber'])
+                text += "%s %s %s.\n"%(compchar_inst,prop,num)
 
             text += "\n\n"
     except ValueError as e:
@@ -808,7 +806,10 @@ if IGNORE_COMM_SHEET:
             Community = '-'.join(tmp[::-1])
         CommunityCharacteristic = v['hasCode']
         parcelHasLocation = v['location']
-        hasLandArea = parcelHasLocation.replace('_Location', '_Land_Area')
+        if type(parcelHasLocation) is str:
+            hasLandArea = parcelHasLocation.replace('_Location', '_Land_Area')
+        else:
+            hasLandArea = np.nan
         print("\"%s\",\"%s\",\"\",\"%s\",\"%s\""%(Community, ','.join(CommunityCharacteristic),hasLandArea, parcelHasLocation))
 
 # write out collected named Characteristics, e.g. CompositeCharacteristic
