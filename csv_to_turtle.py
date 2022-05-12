@@ -20,10 +20,6 @@ import xlsxwriter
 class CompositeCharacteristicException(Exception):
     """Raised when CompositeCharacteristic has less than 2 codes"""
     pass
-# filein  = 'unit_tests_ieee.xlsx'
-# dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
-# fileout = 'unit_tests_ieee.ttl'
-# dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 
 filein  = 'unit_tests3.xlsx'
 dirin = 'csv'
