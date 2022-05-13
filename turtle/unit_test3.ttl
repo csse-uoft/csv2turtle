@@ -275,7 +275,7 @@ cp:Org10_ID cids:hasCharacteristic cp:Comp-INST-Adult-Homeless.
 # ------------------
 cp:Org11 rdf:type cp:Organization;
    org:hasLegalName "Org11 Legal Name";
-   cids:hasImpactModel cp:LM11-1,cp:LM11-3,cp:LM11-2;
+   cids:hasImpactModel cp:LM11-3,cp:LM11-2,cp:LM11-1;
    cids:hasIndicator cp:Org11;
    cids:hasOutcome cp:INST-Food;
    org:hasID cp:Org11_ID;
@@ -309,9 +309,9 @@ cp:Org12_ID cids:hasCharacteristic cp:Comp-INST-Adult-Homeless-Male.
 # ------------------
 cp:Org13 rdf:type cp:Organization;
    org:hasLegalName "Org13 Legal Name";
-   cids:hasImpactModel cp:LM13-2,cp:LM13-1;
+   cids:hasImpactModel cp:LM13-1,cp:LM13-2;
    cids:hasIndicator cp:Org13;
-   cids:hasOutcome cp:INST-Health,cp:INST-Food;
+   cids:hasOutcome cp:INST-Food,cp:INST-Health;
    org:hasID cp:Org13_ID;
 .
 cp:Org13_ID rdf:type org:OrganizationID;
@@ -402,8 +402,8 @@ cp:a1 rdf:type cp:Funding ;
    cp:receivedAmount 100.0 ;
    cp:requestedAmount 100.0 ;
    cp:fundersProgram cp:P20-a1 ;
-   cp:forProgram cp:P10-2, cp:P10-1;
-   cids:forStakeholder cp:sh-Adult-Female-Homeless-in_Area0, cp:sh-Homeless-Female-Youth-in_Area0;
+   cp:forProgram cp:P10-1, cp:P10-2;
+   cids:forStakeholder cp:sh-Homeless-Female-Youth-in_Area0, cp:sh-Adult-Female-Homeless-in_Area0;
 .
 
 
@@ -412,7 +412,7 @@ cp:a100 rdf:type cp:Funding ;
    cp:receivedAmount 200.0 ;
    cp:requestedAmount 300.0 ;
    cp:fundersProgram cp:P100-a100 ;
-   cp:forProgram cp:P20-a1, cp:P20-a2, cp:P30-a3;
+   cp:forProgram cp:P30-a3, cp:P20-a2, cp:P20-a1;
    cids:forStakeholder cp:sh-Funder-in_Area0;
 .
 
@@ -422,7 +422,7 @@ cp:a101 rdf:type cp:Funding ;
    cp:receivedAmount 100.0 ;
    cp:requestedAmount 105.0 ;
    cp:fundersProgram cp:P101-a101 ;
-   cp:forProgram cp:P50-a6na7, cp:P40-a5, cp:P40-a4;
+   cp:forProgram cp:P40-a5, cp:P40-a4, cp:P50-a6na7;
    cids:forStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
 .
 
@@ -432,8 +432,8 @@ cp:a2 rdf:type cp:Funding ;
    cp:receivedAmount 120.0 ;
    cp:requestedAmount 150.0 ;
    cp:fundersProgram cp:P20-a2 ;
-   cp:forProgram cp:P10-3, cp:P11-2, cp:P11-1;
-   cids:forStakeholder cp:sh-Homeless-Female-Youth-in_Area0, cp:sh-Adult-Female-Homeless-in_Area0, cp:sh-Adult-Male-Homeless-in_Area0;
+   cp:forProgram cp:P11-1, cp:P11-2, cp:P10-3;
+   cids:forStakeholder cp:sh-Homeless-Female-Youth-in_Area0, cp:sh-Adult-Male-Homeless-in_Area0, cp:sh-Adult-Female-Homeless-in_Area0;
 .
 
 
@@ -453,7 +453,7 @@ cp:a4 rdf:type cp:Funding ;
    cp:requestedAmount 110.0 ;
    cp:fundersProgram cp:P40-a4 ;
    cp:forProgram cp:P12-1n2;
-   cids:forStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:forStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
 .
 
 
@@ -473,7 +473,7 @@ cp:a6 rdf:type cp:Funding ;
    cp:requestedAmount 100.0 ;
    cp:fundersProgram cp:P50-a6na7 ;
    cp:forProgram cp:P13-4;
-   cids:forStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:forStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
 .
 
 
@@ -483,7 +483,7 @@ cp:a7 rdf:type cp:Funding ;
    cp:requestedAmount 50.0 ;
    cp:fundersProgram cp:P50-a6na7 ;
    cp:forProgram cp:P13-2;
-   cids:forStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:forStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
 .
 
 
@@ -492,8 +492,8 @@ cp:a7 rdf:type cp:Funding ;
    cp:receivedAmount 120.0 ;
    cp:requestedAmount 150.0 ;
    cp:fundersProgram cp:P50-a6na7 ;
-   cp:forProgram cp:P13-1, cp:P13-3, cp:P11-3;
-   cids:forStakeholder cp:sh-Homeless-in_Area1, cp:sh-Adult-Male-Homeless-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Homeless-Female-Youth-in_Area0;
+   cp:forProgram cp:P11-3, cp:P13-3, cp:P13-1;
+   cids:forStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Homeless-Female-Youth-in_Area0, cp:sh-Adult-Male-Homeless-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-in_Area1;
 .
 
 #####################
@@ -502,13 +502,13 @@ cp:a7 rdf:type cp:Funding ;
 cp:LM10 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org10;
    cp:hasName "LM10 Legal Name";
-   cids:hasDescription "Shelter for young homeless women; Shelter for young women; Food for homeless adults";
-   cids:hasProgram cp:P10-2, cp:P10-3, cp:P10-1;
-   cids:hasStakeholder cp:sh-Adult-Female-Homeless-Area0, cp:sh-Adult-Male-Homeless-Area0, cp:sh-Homeless-Female-Youth-Area0;
+   cids:hasDescription "Shelter for Youth homeless women; Shelter for Youth women; Food for homeless adults";
+   cids:hasProgram cp:P10-1, cp:P10-2, cp:P10-3;
+   cids:hasStakeholder cp:sh-Adult-Male-Homeless-Area0, cp:sh-Adult-Female-Homeless-Area0, cp:sh-Homeless-Female-Youth-Area0;
 .
-cp:LM10 cids:hasCharacteristic [cids:hasCode cp:INST-Youth].
-cp:LM10 cids:hasCharacteristic cp:Comp-INST-Female-Homeless-Youth.
 cp:LM10 cids:hasCharacteristic cp:Comp-INST-Homeles-Youth.
+cp:LM10 cids:hasCharacteristic cp:Comp-INST-Female-Homeless-Youth.
+cp:LM10 cids:hasCharacteristic [cids:hasCode cp:INST-Youth].
 
 cp:LM100-a100na101 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org100;
@@ -522,7 +522,7 @@ cp:LM100-a100na101 cids:hasCharacteristic [cids:hasCode cp:INST-Funding].
 cp:LM11-1 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org11;
    cp:hasName "LM11-1 Legal Name";
-   cids:hasDescription "Food for homeless young females";
+   cids:hasDescription "Food for homeless Youth females";
    cids:hasProgram cp:P11-1;
    cids:hasStakeholder cp:sh-Homeless-Female-Youth-Area0;
 .
@@ -531,7 +531,7 @@ cp:LM11-1 cids:hasCharacteristic [cids:hasCode cp:INST-Youth].
 cp:LM11-2 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org11;
    cp:hasName "LM11-2 Legal Name";
-   cids:hasDescription "Food for young people";
+   cids:hasDescription "Food for Youth people";
    cids:hasProgram cp:P11-2;
    cids:hasStakeholder cp:sh-Homeless-Female-Youth-Area0;
 .
@@ -540,7 +540,7 @@ cp:LM11-2 cids:hasCharacteristic cp:Comp-INST-Male-Youth.
 cp:LM11-3 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org11;
    cp:hasName "LM11-3 Legal Name";
-   cids:hasDescription "Food for young women";
+   cids:hasDescription "Food for Youth women";
    cids:hasProgram cp:P11-3;
    cids:hasStakeholder cp:sh-Homeless-Female-Youth-Area0;
 .
@@ -549,29 +549,29 @@ cp:LM11-3 cids:hasCharacteristic cp:Comp-INST-Female-Youth.
 cp:LM12 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org12;
    cp:hasName "LM12 Legal Name";
-   cids:hasDescription "Education for homeless young females; education for young females; Education for Homeless Adult males and females";
-   cids:hasProgram cp:P12-1n2, cp:P12-3;
+   cids:hasDescription "Education for homeless Youth females; education for Youth females; Education for Homeless Adult males and females";
+   cids:hasProgram cp:P12-3, cp:P12-1n2;
    cids:hasStakeholder cp:sh-Adult-Female-Homeless-Area1, cp:sh-Homeless-Female-Youth-Area1;
 .
-cp:LM12 cids:hasCharacteristic cp:Comp-INST-Female-Youth.
 cp:LM12 cids:hasCharacteristic cp:Comp-INST-Female-Homeless-Youth.
 cp:LM12 cids:hasCharacteristic cp:Comp-INST-Adult-Female-Homeless.
+cp:LM12 cids:hasCharacteristic cp:Comp-INST-Female-Youth.
 
 cp:LM13-1 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org13;
    cp:hasName "LM13-1 Legal Name";
-   cids:hasDescription "Health for homeless; Health for Females; Health for young males";
-   cids:hasProgram cp:P13-1, cp:P13-3, cp:P13-2;
-   cids:hasStakeholder cp:sh-Adult-Female-Homeless-Area1, cp:sh-Homeless-Area1, cp:sh-Homeless-Female-Youth-Area1, cp:sh-Adult-Male-Homeless-Area1;
+   cids:hasDescription "Health for homeless; Health for Females; Health for Youth males";
+   cids:hasProgram cp:P13-3, cp:P13-2, cp:P13-1;
+   cids:hasStakeholder cp:sh-Adult-Female-Homeless-Area1, cp:sh-Adult-Male-Homeless-Area1, cp:sh-Homeless-Female-Youth-Area1, cp:sh-Homeless-Area1;
 .
-cp:LM13-1 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
 cp:LM13-1 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 cp:LM13-1 cids:hasCharacteristic cp:Comp-INST-Male-Youth.
+cp:LM13-1 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
 
 cp:LM13-2 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org13;
    cp:hasName "LM13-2 Legal Name";
-   cids:hasDescription "Food for young males and adult females";
+   cids:hasDescription "Food for Youth males and adult females";
    cids:hasProgram cp:P13-4;
    cids:hasStakeholder cp:sh-Adult-Female-Homeless-Area1, cp:sh-Homeless-Female-Youth-Area1;
 .
@@ -581,7 +581,7 @@ cp:LM20-a1na2 rdf:type cids:LogicModel ;
    cids:forOrganization cp:Org20;
    cp:hasName "LM20-a1na2 Legal Name";
    cids:hasDescription "Funding for P20";
-   cids:hasProgram cp:P20-a1, cp:P20-a2;
+   cids:hasProgram cp:P20-a2, cp:P20-a1;
    cids:hasStakeholder cp:sh-Food-Shelter-Area0;
 .
 cp:LM20-a1na2 cids:hasCharacteristic [cids:hasCode cp:INST-Funding].
@@ -618,15 +618,15 @@ cp:LM50-a6na7 cids:hasCharacteristic [cids:hasCode cp:INST-Funding].
 ####################
 cp:P10-1 rdf:type cp:Program ;
    cp:hasName "P10-1 Name";
-   cids:hasDescription "Shelter for young homeless women";
+   cids:hasDescription "Shelter for Youth homeless women";
    cids:hasService cp:S10-1-Shelter;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area0, cp:sh-Homeless-Female-Youth-in_Area0;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0, cp:sh-Adult-Female-Homeless-in_Area0;
 .
 
 cp:P10-2 rdf:type cp:Program ;
    cp:hasName "P10-2 Name";
-   cids:hasDescription "Shelter for young women";
+   cids:hasDescription "Shelter for Youth women";
    cids:hasService cp:S10-2-Shelter;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0;
@@ -637,7 +637,7 @@ cp:P10-3 rdf:type cp:Program ;
    cids:hasDescription "Shelter for homeless adults";
    cids:hasService cp:S10-3-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area0, cp:sh-Adult-Male-Homeless-in_Area0;
+   cids:hasBeneficialStakeholder cp:sh-Adult-Male-Homeless-in_Area0, cp:sh-Adult-Female-Homeless-in_Area0;
 .
 
 cp:P100-a100 rdf:type cp:Program ;
@@ -658,7 +658,7 @@ cp:P101-a101 rdf:type cp:Program ;
 
 cp:P11-1 rdf:type cp:Program ;
    cp:hasName "P11-1 Name";
-   cids:hasDescription "Food for homeless young females";
+   cids:hasDescription "Food for homeless Youth females";
    cids:hasService cp:S11-1-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0;
@@ -666,7 +666,7 @@ cp:P11-1 rdf:type cp:Program ;
 
 cp:P11-2 rdf:type cp:Program ;
    cp:hasName "P11-2 Name";
-   cids:hasDescription "Food for young people";
+   cids:hasDescription "Food for Youth people";
    cids:hasService cp:S11-2-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0;
@@ -674,7 +674,7 @@ cp:P11-2 rdf:type cp:Program ;
 
 cp:P11-3 rdf:type cp:Program ;
    cp:hasName "P11-3 Name";
-   cids:hasDescription "Food for young women";
+   cids:hasDescription "Food for Youth women";
    cids:hasService cp:S11-3-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0;
@@ -682,10 +682,10 @@ cp:P11-3 rdf:type cp:Program ;
 
 cp:P12-1n2 rdf:type cp:Program ;
    cp:hasName "P12-1n2 Name";
-   cids:hasDescription "Education for homeless young females, and homeles yong females; Education for young females";
-   cids:hasService cp:S12-2-Education, cp:S12-1-Education;
+   cids:hasDescription "Education for homeless Youth females, and homeles yong females; Education for Youth females";
+   cids:hasService cp:S12-1-Education, cp:S12-2-Education;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
 .
 
 cp:P12-3 rdf:type cp:Program ;
@@ -701,7 +701,7 @@ cp:P13-1 rdf:type cp:Program ;
    cids:hasDescription "Health for homeless";
    cids:hasService cp:S13-1-Health;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Male-Homeless-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Adult-Male-Homeless-in_Area1, cp:sh-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
 .
 
 cp:P13-2 rdf:type cp:Program ;
@@ -709,12 +709,12 @@ cp:P13-2 rdf:type cp:Program ;
    cids:hasDescription "Health for Females";
    cids:hasService cp:S13-2-Health;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
 .
 
 cp:P13-3 rdf:type cp:Program ;
    cp:hasName "P13-3 Name";
-   cids:hasDescription "Health for young males";
+   cids:hasDescription "Health for Youth males";
    cids:hasService cp:S13-3-Health;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1;
@@ -722,10 +722,10 @@ cp:P13-3 rdf:type cp:Program ;
 
 cp:P13-4 rdf:type cp:Program ;
    cp:hasName "P13-4 Name";
-   cids:hasDescription "Food for young males and adult females; Food for young males and adult females";
+   cids:hasDescription "Food for Youth males and adult females; Food for Youth males and adult females";
    cids:hasService cp:S13-4-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
 .
 
 cp:P20-a1 rdf:type cp:Program ;
@@ -781,11 +781,11 @@ cp:P50-a6na7 rdf:type cp:Program ;
 ####################
 cp:S10-1-Shelter rdf:type cp:Service ;
    cp:hasName "S10-1-Shelter Name";
-   cids:hasDescription "Shelter for young homeless women";
+   cids:hasDescription "Shelter for Youth homeless women";
    oep:partOf cp:LM10;
-   cids:hasCode cp:CL-Shelter;
+   cids:hasCode cp:INST-Shelter;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area0, cp:sh-Homeless-Female-Youth-in_Area0;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0, cp:sh-Adult-Female-Homeless-in_Area0;
    cp:hasMode cp:in-person;
 .
 cp:S10-1-Shelter cp:hasRequirement cp:Comp-INST-Female-Homeless-Youth.
@@ -793,9 +793,9 @@ cp:S10-1-Shelter cp:hasFocus cp:Comp-INST-Female-Homeless-Youth.
 
 cp:S10-2-Shelter rdf:type cp:Service ;
    cp:hasName "S10-2-Shelter Name";
-   cids:hasDescription "Shelter for young women";
+   cids:hasDescription "Shelter for Youth women";
    oep:partOf cp:LM10;
-   cids:hasCode cp:CL-Shelter;
+   cids:hasCode cp:INST-Shelter;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0;
    cp:hasMode cp:in-person;
@@ -807,9 +807,9 @@ cp:S10-3-Food rdf:type cp:Service ;
    cp:hasName "S10-3-Food Name";
    cids:hasDescription "Food for homeless adults";
    oep:partOf cp:LM10;
-   cids:hasCode cp:CL-Food;
+   cids:hasCode cp:INST-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area0, cp:sh-Adult-Male-Homeless-in_Area0;
+   cids:hasBeneficialStakeholder cp:sh-Adult-Male-Homeless-in_Area1, cp:sh-Adult-Female-Homeless-in_Area0;
    cp:hasMode cp:in-person;
 .
 cp:S10-3-Food cp:hasRequirement cp:Comp-INST-Adult-Homeless.
@@ -819,7 +819,7 @@ cp:S100-a100 rdf:type cp:Service ;
    cp:hasName "S100-a100 Name";
    cids:hasDescription "Funding for all funders";
    oep:partOf cp:LM100-a100na101;
-   cids:hasCode cp:CL-Funding;
+   cids:hasCode cp:INST-Funding;
    cids:hasBeneficialStakeholder cp:sh-Funder-in_Area0;
    cp:hasMode cp:offline;
 .
@@ -828,16 +828,16 @@ cp:S101-a101 rdf:type cp:Service ;
    cp:hasName "S101-a101 Name";
    cids:hasDescription "Funding for all funders";
    oep:partOf cp:LM100-a100na101;
-   cids:hasCode cp:CL-Funding;
+   cids:hasCode cp:INST-Funding;
    cids:hasBeneficialStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cp:hasMode cp:offline;
 .
 
 cp:S11-1-Food rdf:type cp:Service ;
    cp:hasName "S11-1-Food Name";
-   cids:hasDescription "Food for homeless young females";
+   cids:hasDescription "Food for homeless Youth females";
    oep:partOf cp:LM11-1;
-   cids:hasCode cp:CL-Food;
+   cids:hasCode cp:INST-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0;
    cp:hasMode cp:in-person;
@@ -847,9 +847,9 @@ cp:S11-1-Food cp:hasFocus cp:Comp-INST-Female-Homeless-Youth.
 
 cp:S11-2-Food rdf:type cp:Service ;
    cp:hasName "S11-2-Food Name";
-   cids:hasDescription "Food for young people";
+   cids:hasDescription "Food for Youth people";
    oep:partOf cp:LM11-2;
-   cids:hasCode cp:CL-Food;
+   cids:hasCode cp:INST-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0;
    cp:hasMode cp:in-person;
@@ -859,9 +859,9 @@ cp:S11-2-Food cp:hasFocus [cids:hasCode cp:INST-Youth].
 
 cp:S11-3-Food rdf:type cp:Service ;
    cp:hasName "S11-3-Food Name";
-   cids:hasDescription "Food for young women";
+   cids:hasDescription "Food for Youth women";
    oep:partOf cp:LM11-3;
-   cids:hasCode cp:CL-Food;
+   cids:hasCode cp:INST-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area0, cp:sh-Female-Youth-in_Area0;
    cp:hasMode cp:in-person;
@@ -871,11 +871,11 @@ cp:S11-3-Food cp:hasFocus cp:Comp-INST-Female-Youth.
 
 cp:S12-1-Education rdf:type cp:Service ;
    cp:hasName "S12-1-Education Name";
-   cids:hasDescription "Education for homeless young females";
+   cids:hasDescription "Education for homeless Youth females";
    oep:partOf cp:LM12;
-   cids:hasCode cp:CL-Education;
+   cids:hasCode cp:INST-Education;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
    cp:hasMode cp:in-person;
 .
 cp:S12-1-Education cp:hasRequirement cp:Comp-INST-Female-Youth.
@@ -883,9 +883,9 @@ cp:S12-1-Education cp:hasFocus cp:Comp-INST-Female-Youth.
 
 cp:S12-2-Education rdf:type cp:Service ;
    cp:hasName "S12-2-Education Name";
-   cids:hasDescription "education for young females";
+   cids:hasDescription "education for Youth females";
    oep:partOf cp:LM12;
-   cids:hasCode cp:CL-Education;
+   cids:hasCode cp:INST-Education;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1;
    cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1;
    cp:hasMode cp:in-person;
@@ -897,9 +897,9 @@ cp:S12-3-Education rdf:type cp:Service ;
    cp:hasName "S12-3-Education Name";
    cids:hasDescription "Education for Homeless Adult males and females";
    oep:partOf cp:LM12;
-   cids:hasCode cp:CL-Education;
+   cids:hasCode cp:INST-Education;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
    cp:hasMode cp:in-person;
 .
 cp:S12-3-Education cp:hasRequirement cp:Comp-INST-Adult-Homeless-Male.
@@ -911,9 +911,9 @@ cp:S13-1-Health rdf:type cp:Service ;
    cp:hasName "S13-1-Health Name";
    cids:hasDescription "Health for homeless";
    oep:partOf cp:LM13-1;
-   cids:hasCode cp:CL-Health;
+   cids:hasCode cp:INST-Health;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Male-Homeless-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Adult-Male-Homeless-in_Area1, cp:sh-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
    cp:hasMode cp:in-person;
 .
 cp:S13-1-Health cp:hasRequirement [cids:hasCode cp:INST-Homeless].
@@ -923,9 +923,9 @@ cp:S13-2-Health rdf:type cp:Service ;
    cp:hasName "S13-2-Health Name";
    cids:hasDescription "Health for Females";
    oep:partOf cp:LM13-1;
-   cids:hasCode cp:CL-Health;
+   cids:hasCode cp:INST-Health;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
    cp:hasMode cp:in-person;
 .
 cp:S13-2-Health cp:hasRequirement [cids:hasCode cp:INST-Female].
@@ -933,35 +933,35 @@ cp:S13-2-Health cp:hasFocus [cids:hasCode cp:INST-Female].
 
 cp:S13-3-Health rdf:type cp:Service ;
    cp:hasName "S13-3-Health Name";
-   cids:hasDescription "Health for young males";
+   cids:hasDescription "Health for Youth males";
    oep:partOf cp:LM13-1;
-   cids:hasCode cp:CL-Health;
+   cids:hasCode cp:INST-Health;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1;
    cp:hasMode cp:in-person;
 .
-cp:S13-3-Health cp:hasRequirement cp:Comp-INST-Male-Young.
-cp:S13-3-Health cp:hasFocus cp:Comp-INST-Male-Young.
+cp:S13-3-Health cp:hasRequirement cp:Comp-INST-Male-Youth.
+cp:S13-3-Health cp:hasFocus cp:Comp-INST-Male-Youth.
 
 cp:S13-4-Food rdf:type cp:Service ;
    cp:hasName "S13-4-Food Name";
-   cids:hasDescription "Food for young males and adult females";
+   cids:hasDescription "Food for Youth males and adult females";
    oep:partOf cp:LM13-2;
-   cids:hasCode cp:CL-Food;
+   cids:hasCode cp:INST-Food;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Adult-Female-Homeless-in_Area1, cp:sh-Homeless-Female-Youth-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Homeless-Female-Youth-in_Area1, cp:sh-Adult-Female-Homeless-in_Area1;
    cp:hasMode cp:in-person;
 .
-cp:S13-4-Food cp:hasRequirement cp:Comp-INST-Male-Young.
+cp:S13-4-Food cp:hasRequirement cp:Comp-INST-Male-Youth.
 cp:S13-4-Food cp:hasRequirement cp:Comp-INST-Adult-Male.
-cp:S13-4-Food cp:hasFocus cp:Comp-INST-Male-Young.
+cp:S13-4-Food cp:hasFocus cp:Comp-INST-Male-Youth.
 cp:S13-4-Food cp:hasFocus cp:Comp-INST-Adult-Male.
 
 cp:S20-a1 rdf:type cp:Service ;
    cp:hasName "S20-a1 Name";
    cids:hasDescription "Funding for P20";
    oep:partOf cp:LM20-a1na2;
-   cids:hasCode cp:CL-Funding;
+   cids:hasCode cp:INST-Funding;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Food-Shelter-in_Area0;
    cp:hasMode cp:online;
@@ -971,7 +971,7 @@ cp:S20-a2 rdf:type cp:Service ;
    cp:hasName "S20-a2 Name";
    cids:hasDescription "Funding for P20";
    oep:partOf cp:LM20-a1na2;
-   cids:hasCode cp:CL-Funding;
+   cids:hasCode cp:INST-Funding;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Food-Shelter-in_Area0;
    cp:hasMode cp:online;
@@ -981,7 +981,7 @@ cp:S30-a3 rdf:type cp:Service ;
    cp:hasName "S30-a3 Name";
    cids:hasDescription "Funding for P30";
    oep:partOf cp:LM30-a1;
-   cids:hasCode cp:CL-Funding;
+   cids:hasCode cp:INST-Funding;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Food-in_Area0;
    cp:hasMode cp:online;
@@ -991,7 +991,7 @@ cp:S40-a4 rdf:type cp:Service ;
    cp:hasName "S40-a4 Name";
    cids:hasDescription "Funding for P40";
    oep:partOf cp:LM40-a4na5;
-   cids:hasCode cp:CL-Funding;
+   cids:hasCode cp:INST-Funding;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Education-in_Area1;
    cp:hasMode cp:online;
@@ -1001,7 +1001,7 @@ cp:S40-a5 rdf:type cp:Service ;
    cp:hasName "S40-a5 Name";
    cids:hasDescription "Funding for P40";
    oep:partOf cp:LM40-a4na5;
-   cids:hasCode cp:CL-Funding;
+   cids:hasCode cp:INST-Funding;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
    cids:hasBeneficialStakeholder cp:sh-Education-in_Area1;
    cp:hasMode cp:online;
@@ -1011,9 +1011,9 @@ cp:S50-a6na7 rdf:type cp:Service ;
    cp:hasName "S50-a6na7 Name";
    cids:hasDescription "Funding for P50";
    oep:partOf cp:LM50-a6na7;
-   cids:hasCode cp:CL-Funding;
+   cids:hasCode cp:INST-Funding;
    cids:hasContributingStakeholder cp:sh-Funder-in_Area1, cp:sh-Funder-in_Area0;
-   cids:hasBeneficialStakeholder cp:sh-Food-in_Area0, cp:sh-Food-Health-in_Area1;
+   cids:hasBeneficialStakeholder cp:sh-Food-Health-in_Area1, cp:sh-Food-in_Area0;
    cp:hasMode cp:online;
 .
 
@@ -1027,20 +1027,20 @@ cp:S50-a6na7 rdf:type cp:Service ;
 # Stakeholders
 ####################
 
-# Stakeholder (cp:sh-Adult-Female-Homeless-in_Area0)
-cp:sh-Adult-Female-Homeless-in_Area0 rdf:type cids:Stakeholder.
-cp:sh-Adult-Female-Homeless-in_Area0 i72:located_in cp:Area0_Location.
-cp:sh-Adult-Female-Homeless-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Adult].
-cp:sh-Adult-Female-Homeless-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
-cp:sh-Adult-Female-Homeless-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
-
-
 # Stakeholder (cp:sh-Homeless-Female-Youth-in_Area0)
 cp:sh-Homeless-Female-Youth-in_Area0 rdf:type cids:Stakeholder.
 cp:sh-Homeless-Female-Youth-in_Area0 i72:located_in cp:Area0_Location.
 cp:sh-Homeless-Female-Youth-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
 cp:sh-Homeless-Female-Youth-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 cp:sh-Homeless-Female-Youth-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Youth].
+
+
+# Stakeholder (cp:sh-Adult-Female-Homeless-in_Area0)
+cp:sh-Adult-Female-Homeless-in_Area0 rdf:type cids:Stakeholder.
+cp:sh-Adult-Female-Homeless-in_Area0 i72:located_in cp:Area0_Location.
+cp:sh-Adult-Female-Homeless-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Adult].
+cp:sh-Adult-Female-Homeless-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
+cp:sh-Adult-Female-Homeless-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 
 
 # Stakeholder (cp:sh-Funder-in_Area0)
@@ -1063,14 +1063,6 @@ cp:sh-Adult-Male-Homeless-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-
 cp:sh-Adult-Male-Homeless-in_Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Male].
 
 
-# Stakeholder (cp:sh-Adult-Female-Homeless-in_Area1)
-cp:sh-Adult-Female-Homeless-in_Area1 rdf:type cids:Stakeholder.
-cp:sh-Adult-Female-Homeless-in_Area1 i72:located_in cp:Area1_Location.
-cp:sh-Adult-Female-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Adult].
-cp:sh-Adult-Female-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
-cp:sh-Adult-Female-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
-
-
 # Stakeholder (cp:sh-Homeless-Female-Youth-in_Area1)
 cp:sh-Homeless-Female-Youth-in_Area1 rdf:type cids:Stakeholder.
 cp:sh-Homeless-Female-Youth-in_Area1 i72:located_in cp:Area1_Location.
@@ -1079,10 +1071,12 @@ cp:sh-Homeless-Female-Youth-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INS
 cp:sh-Homeless-Female-Youth-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Youth].
 
 
-# Stakeholder (cp:sh-Homeless-in_Area1)
-cp:sh-Homeless-in_Area1 rdf:type cids:Stakeholder.
-cp:sh-Homeless-in_Area1 i72:located_in cp:Area1_Location.
-cp:sh-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
+# Stakeholder (cp:sh-Adult-Female-Homeless-in_Area1)
+cp:sh-Adult-Female-Homeless-in_Area1 rdf:type cids:Stakeholder.
+cp:sh-Adult-Female-Homeless-in_Area1 i72:located_in cp:Area1_Location.
+cp:sh-Adult-Female-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Adult].
+cp:sh-Adult-Female-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
+cp:sh-Adult-Female-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 
 
 # Stakeholder (cp:sh-Adult-Male-Homeless-in_Area1)
@@ -1093,12 +1087,10 @@ cp:sh-Adult-Male-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-
 cp:sh-Adult-Male-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Male].
 
 
-# Stakeholder (cp:sh-Adult-Female-Homeless-Area0)
-cp:sh-Adult-Female-Homeless-Area0 rdf:type cids:Stakeholder.
-cp:sh-Adult-Female-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Adult].
-cp:sh-Adult-Female-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Area0].
-cp:sh-Adult-Female-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
-cp:sh-Adult-Female-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
+# Stakeholder (cp:sh-Homeless-in_Area1)
+cp:sh-Homeless-in_Area1 rdf:type cids:Stakeholder.
+cp:sh-Homeless-in_Area1 i72:located_in cp:Area1_Location.
+cp:sh-Homeless-in_Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 
 
 # Stakeholder (cp:sh-Adult-Male-Homeless-Area0)
@@ -1107,6 +1099,14 @@ cp:sh-Adult-Male-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Adu
 cp:sh-Adult-Male-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Area0].
 cp:sh-Adult-Male-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 cp:sh-Adult-Male-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Male].
+
+
+# Stakeholder (cp:sh-Adult-Female-Homeless-Area0)
+cp:sh-Adult-Female-Homeless-Area0 rdf:type cids:Stakeholder.
+cp:sh-Adult-Female-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Adult].
+cp:sh-Adult-Female-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Area0].
+cp:sh-Adult-Female-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Female].
+cp:sh-Adult-Female-Homeless-Area0 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 
 
 # Stakeholder (cp:sh-Homeless-Female-Youth-Area0)
@@ -1145,18 +1145,18 @@ cp:sh-Homeless-Female-Youth-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-H
 cp:sh-Homeless-Female-Youth-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Youth].
 
 
-# Stakeholder (cp:sh-Homeless-Area1)
-cp:sh-Homeless-Area1 rdf:type cids:Stakeholder.
-cp:sh-Homeless-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Area1].
-cp:sh-Homeless-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
-
-
 # Stakeholder (cp:sh-Adult-Male-Homeless-Area1)
 cp:sh-Adult-Male-Homeless-Area1 rdf:type cids:Stakeholder.
 cp:sh-Adult-Male-Homeless-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Adult].
 cp:sh-Adult-Male-Homeless-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Area1].
 cp:sh-Adult-Male-Homeless-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 cp:sh-Adult-Male-Homeless-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Male].
+
+
+# Stakeholder (cp:sh-Homeless-Area1)
+cp:sh-Homeless-Area1 rdf:type cids:Stakeholder.
+cp:sh-Homeless-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Area1].
+cp:sh-Homeless-Area1 cids:hasCharacteristic [cids:hasCode cp:INST-Homeless].
 
 
 # Stakeholder (cp:sh-Food-Shelter-Area0)
@@ -1255,9 +1255,6 @@ cp:Comp-INST-Male-Youth oep:hasPart [cids:hasCode cp:INST-Male; cids:hasCode cp:
 
 cp:Comp-INST-Homeles-Youth rdf:type cids:CompositeCharacteristic.
 cp:Comp-INST-Homeles-Youth oep:hasPart [cids:hasCode cp:INST-Homeles; cids:hasCode cp:INST-Youth].
-
-cp:Comp-INST-Male-Young rdf:type cids:CompositeCharacteristic.
-cp:Comp-INST-Male-Young oep:hasPart [cids:hasCode cp:INST-Male; cids:hasCode cp:INST-Young].
 
 cp:Comp-INST-Adult-Male rdf:type cids:CompositeCharacteristic.
 cp:Comp-INST-Adult-Male oep:hasPart [cids:hasCode cp:INST-Adult; cids:hasCode cp:INST-Male].
