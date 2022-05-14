@@ -249,6 +249,38 @@ def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
     return text
 
 
+def overwrite_sheet(sheet, updated_df, dirin,filein):
+    xls = pd.ExcelFile(dirin+'/'+filein)
+    with pd.ExcelWriter(dirin+'/~'+filein,engine='xlsxwriter') as writer:
+        workbook  = writer.book
+        desc_format = workbook.add_format({'bold': False, 'text_wrap': True, 'valign': 'top', 'align':'left', 'fg_color':'#ffffe0', 'border':6})
+        header_format = workbook.add_format({'bold': True, 'valign': 'top'})
+        for sheet_name in xls.sheet_names:
+            try:
+                if sheet_name == sheet:
+                    df = updated_df.copy()
+                else:
+                    df = pd.read_excel(xls,sheet_name, header=None)
+                df.to_excel(writer, sheet_name=sheet_name, index=False, header=None)
+                worksheet = writer.sheets[sheet_name]
+                # Overwrite both the value and the format of each header cell
+                for col_num,value in enumerate(df.iloc[1].values):
+                    value = '' if pd.isnull(value) else value
+                    _=worksheet.write(1, col_num , value, header_format)
+                for col_num,value in enumerate(df.iloc[0].values):
+                    value = '' if pd.isnull(value) else value
+                    _=worksheet.write(0, col_num , value, desc_format)
+                    max_col_len = np.min([30, df[col_num].apply(lambda val: len(str(val))).max()])
+                    _=worksheet.set_column(0,col_num , max_col_len)
+            except ValueError as e:
+                print(e)
+                raise("trouble writing sheet (%s)"%(sheet_name))
+
+    os.remove(dirin+'/'+filein)
+    os.rename(dirin+'/~'+filein, dirin+'/'+filein)
+
+
+
 # Read main Ex ffle
 xls = pd.ExcelFile(dirin+'/'+filein)
 
@@ -717,11 +749,11 @@ except ValueError as e:
 ########################################################
 # Collect and write Stakeholder defintions to text file
 ########################################################
-# To ignore the strakeholder sheet, you can collect the ones found in other sheets.
+# To update the strakeholder sheet with collected stakeholders from other sheets, 
 # If you want to add the collected stakeholders into the sheet, 
-# then import the printed output into the sheet, and replace existing content
-#      set IGNORE_SH_SHEET = True
-IGNORE_SH_SHEET = False
+# then set UPDATE_SH_SHEET = True
+# Note this will overwrite any incorrectly named stakeholders with the correct characteristics.
+UPDATE_SH_SHEET = True
 
 stakeholders = {}
 # get stakeholders collected form other sheets
@@ -741,38 +773,38 @@ for sids in COLLECT_STAKEHOLDERS:
         
 
 # Get stakeholders from 'Stakeholders' sheet
-if not IGNORE_SH_SHEET:
-    try:
-        df = pd.read_excel(xls,'Stakeholders', header=1)
-        df = df.drop_duplicates().dropna(how='all')
-        sids = []
-        for _,row in df.iterrows():
-            sids.append(row['Stakeholder'].split(','))
-        sids = list(set(flatten(sids)))
-        sids.sort()
+try:
+    df = pd.read_excel(xls,'Stakeholders', header=1)
+    df = df.drop_duplicates().dropna(how='all')
+    sids = []
+    for _,row in df.iterrows():
+        sids.append(row['Stakeholder'].split(','))
+    sids = list(set(flatten(sids)))
+    sids.sort()
 
 
-        # initialize any stakeholdes that have not been found already
-        for sid in sids:
+    # initialize any stakeholdes that have not been found already
+    for sid in sids:
+        sid = entity_str(sid)
+        if sid not in stakeholders.keys():
+            stakeholders[sid] = {'hasCode':[], "location":np.nan}
+    for _,row in df.iterrows():
+        for sid in row['Stakeholder'].split(','):
             sid = entity_str(sid)
-            if sid not in stakeholders.keys():
-                stakeholders[sid] = {'hasCode':[], "location":np.nan}
-        for _,row in df.iterrows():
-            for sid in row['Stakeholder'].split(','):
-                sid = entity_str(sid)
-                if stakeholders[sid]['hasCode'] == []:
-                    if row['hasCode'] == row['hasCode']:
-                        for code in [c.strip() for c in row['hasCode'].split(',')]:
-                            stakeholders[sid]['hasCode'].append(code)
-                if pd.isnull(stakeholders[sid]['location']) and not pd.isnull(row['location']):
-                    stakeholders[sid]['location'] = row['location']
-    except ValueError as e:
-        print(e)
+            if stakeholders[sid]['hasCode'] == []:
+                if row['hasCode'] == row['hasCode']:
+                    for code in [c.strip() for c in row['hasCode'].split(',')]:
+                        stakeholders[sid]['hasCode'].append(code)
+            if pd.isnull(stakeholders[sid]['location']) and not pd.isnull(row['location']):
+                stakeholders[sid]['location'] = row['location']
+except ValueError as e:
+    print(e)
 
 # sort codes for all stakeholders
 for k,v in stakeholders.items():
     stakeholders[k]['hasCode'] = list(set(v['hasCode']))
     stakeholders[k]['hasCode'].sort()
+    stakeholders[k]['hasCode'] = ','.join(stakeholders[k]['hasCode'])
 
 # insert stakeholders into file
 text += "#####################\n# Stakeholders\n####################\n"
@@ -787,13 +819,20 @@ for sid,props in stakeholders.items():
         inst = entity_str(props['location'])
         text += "%s %s %s.\n"%(sinst, prop, inst)
 
-    text += format_characteristics_text(sinst, props["hasCode"])
+    text += format_characteristics_text(sinst, [props["hasCode"]])
 
     text += "\n"
 
-if IGNORE_SH_SHEET:
-    for k,v in stakeholders.items():
-        print("\"%s\",\"%s\",\"%s\""%(k.split(':')[1],','.join(v['hasCode']),v['location']))
+if UPDATE_SH_SHEET:
+    sheet = 'Stakeholders'
+    xls = pd.ExcelFile(dirin+'/'+filein)
+    df = pd.read_excel(xls,sheet, header=None)
+    df = df.drop_duplicates().dropna(how='all')
+    # take only the header rows from original
+    updated_df = df[:2].copy()
+
+    updated_df = pd.concat([updated_df, pd.DataFrame([(k.split(':')[1],v['hasCode'],v['location']) for k,v in stakeholders.items()])])
+    overwrite_sheet(sheet, updated_df, dirin,filein)
 
 
 if IGNORE_COMM_SHEET:
