@@ -7,6 +7,50 @@
 #   create a turtle (.ttl) file from csv/excel data files
 ######################################################
 
+############################################################################
+# For the Services Sheet
+# Service hasBeneficalStakeholder values should match the hasRequirement and requiredCommunity, if set.
+# Set CHECK_SERVICE_SH_SHEET = True to throw exception when these do not match.
+# Set UPDATE_SERVICE_SH_SHEET = True to overwrite hasBeneficialStakeholder values from ones generated 
+# from hasRequirement and requiredCommunity.
+# Note the last one wil overwrite the actual input Excel file
+CHECK_SERVICE_SH_SHEET = False
+UPDATE_SERVICE_SH_SHEET = True
+############################################################################
+
+############################################################################
+# For the Stakeholder Sheet
+# To update the strakeholder sheet with collected stakeholders from other sheets, 
+# then set UPDATE_SH_SHEET = True
+# Note this will overwrite any incorrectly named stakeholders with the correct characteristics.
+UPDATE_SH_SHEET = True
+############################################################################
+
+############################################################################
+# For the Programs Sheet
+# The Programs Sheet shoudl have refernces to stakhodlers in the Services sheet.
+# To update the Programs sheet with collected stakeholders from Services, 
+# then set UPDATE_PROGRAMS_SHEET = True
+# Note the last one wil overwrite the actual input Excel file
+UPDATE_PROGRAMS_SHEET = True
+############################################################################
+
+############################################################################
+# For the Communities Sheet
+# To ignore communities from sheet and overwrite communities from collected stakeholders, 
+# set IGNORE_COMM_SHEET = True
+# This overwrites CHECK_COMM_SHEET and UPDATE_COMM_SHEET
+IGNORE_COMM_SHEET = False
+#---------------------------------------------------------------------------
+# Service hasBeneficalStakeholder values should match the hasRequirement and requiredCommunity, if set.
+# Set CHECK_SERVICE_SH_SHEET = True to throw exception when these do not match.
+# Set UPDATE_SERVICE_SH_SHEET = True to overwrite hasBeneficialStakeholder values from ones generated 
+# from hasRequirement and requiredCommunity.
+# Note the last one wil overwrite the actual input Excel file
+CHECK_COMM_SHEET = False
+UPDATE_COMM_SHEET = True
+############################################################################
+
 
 import os
 from datetime import datetime
@@ -25,13 +69,22 @@ class CharacterisrticParamException(Exception):
     """Raised when the incorrect format of characteristics is passed"""
     pass
 
+class ShareholderFormattingException(Exception):
+    """Raised when the incorrect format of shareholders is found"""
+    pass
+
+class MissingProgramHasServiceException(Exception):
+    """Raised when a Program does not have a matching service in the Services sheet"""
+    pass
+
+# file_date = datetime.now().strftime("%B %d, %Y %H:%M:%S")
+file_date = datetime.now().strftime("%B %Y Release")
+
 # filein  = 'unit_tests_ieee.xlsx'
 # dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 # fileout = 'unit_tests_ieee.ttl'
 # dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 
-# file_date = datetime.now().strftime("%B %d, %Y %H:%M:%S")
-file_date = datetime.now().strftime("%B %Y Release")
 filein  = 'unit_tests3.xlsx'
 dirin = 'csv'
 fileout = 'unit_test3.ttl'
@@ -190,6 +243,49 @@ def format_lists(insts, entity=True):
         insts = [entity_str(s) for s in insts]
     return insts
 
+def gen_code_list_from_characteristics(data):
+    '''
+    generate a Stakeholder label from characteristics
+    res = "One-Two-Three_and_Four'
+    '''
+    res = ''
+    if data != data:
+        data = ''
+    elif data.startswith('cids:hasCode '):
+        data = data.replace('cids:hasCode ','')
+
+    if len(re.findall(r'[a-z:]*Comp\-INST\-', data)) > 0:
+        codes = [c.strip() for c in re.sub(r'[a-z:]*Comp\-INST\-','',data).split('-')]
+    else:
+        codes = [re.sub(r'^INST-','',c.strip()) for c in data.split(',')]
+    codes.sort()
+    return codes
+
+def gen_stakeholder_from_characteristics(data, location=None):
+    '''
+    generate a Stakeholder label from characteristics and (optional) Area passed
+    res = "sh-One-Two-Three_and_Four-in_Area0'
+    '''
+    codes = gen_code_list_from_characteristics(data)
+
+    res = 'sh-'+'-'.join(codes)
+    if location is not None and location==location:
+        res += '-in_%s'%(location.strip())
+    return re.sub(r'\-+','-',res)
+
+def gen_community_from_characteristics(data,location):
+    '''
+    generate a Community label from characteristics and (optional) Area passed
+    res = "Area0-One-Two-Three_and_Four'
+    '''
+    if location != location or location=='':
+        return ''
+    codes = gen_code_list_from_characteristics(data)
+    res = '-'.join(codes)
+    res = location.strip() + '-'+res
+    return re.sub(r'\-+','-',res)
+
+
 def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
     text = ''
     if type(chars) == str:
@@ -249,7 +345,7 @@ def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
     return text
 
 
-def overwrite_sheet(sheet, updated_df, dirin,filein):
+def overwrite_sheet(sheet, updated_df, dirin,filein, overwrite=True):
     xls = pd.ExcelFile(dirin+'/'+filein)
     with pd.ExcelWriter(dirin+'/~'+filein,engine='xlsxwriter') as writer:
         workbook  = writer.book
@@ -276,8 +372,9 @@ def overwrite_sheet(sheet, updated_df, dirin,filein):
                 print(e)
                 raise("trouble writing sheet (%s)"%(sheet_name))
 
-    os.remove(dirin+'/'+filein)
-    os.rename(dirin+'/~'+filein, dirin+'/'+filein)
+    if overwrite == True:
+        os.remove(dirin+'/'+filein)
+        os.rename(dirin+'/~'+filein, dirin+'/'+filein)
 
 
 
@@ -311,12 +408,6 @@ except ValueError as e:
     print(e)
 
 
-##########################################################
-# Get Communities
-# to get communities fro collected stakeholders, 
-# set IGNORE_COMM_SHEET = True
-##########################################################
-IGNORE_COMM_SHEET = False
 if not IGNORE_COMM_SHEET:
     try:
         # Communities
@@ -664,7 +755,6 @@ try:
         for r in list(set(grp['hasFocus'].values)):
             text += format_characteristics_text(sinst, [r], prop0='hasFocus')
 
-
         text += "\n"
 except ValueError as e:
     print(e)
@@ -749,12 +839,6 @@ except ValueError as e:
 ########################################################
 # Collect and write Stakeholder defintions to text file
 ########################################################
-# To update the strakeholder sheet with collected stakeholders from other sheets, 
-# If you want to add the collected stakeholders into the sheet, 
-# then set UPDATE_SH_SHEET = True
-# Note this will overwrite any incorrectly named stakeholders with the correct characteristics.
-UPDATE_SH_SHEET = True
-
 stakeholders = {}
 # get stakeholders collected form other sheets
 for sids in COLLECT_STAKEHOLDERS:
@@ -829,11 +913,79 @@ if UPDATE_SH_SHEET:
     df = pd.read_excel(xls,sheet, header=None)
     df = df.drop_duplicates().dropna(how='all')
     # take only the header rows from original
-    updated_df = df[:2].copy()
+    header_df = df[:2].copy()
 
-    updated_df = pd.concat([updated_df, pd.DataFrame([(k.split(':')[1],v['hasCode'],v['location']) for k,v in stakeholders.items()])])
+    updated_df = pd.concat([header_df, pd.DataFrame([(k.split(':')[1],v['hasCode'],v['location']) for k,v in stakeholders.items()])])
     overwrite_sheet(sheet, updated_df, dirin,filein)
+    
+if CHECK_SERVICE_SH_SHEET or UPDATE_SERVICE_SH_SHEET:
+    sheet = 'Services'
+    xls = pd.ExcelFile(dirin+'/'+filein)
+    df = pd.read_excel(xls,sheet, header=None)
+    df = df.drop_duplicates().dropna(how='all')
+    # take only the header rows from original
+    header_df = df[:2].copy()
+    df = pd.read_excel(xls,sheet, header=1)
+    df = df.drop_duplicates().dropna(how='all')
 
+
+    for idx,row in df.iterrows():
+        if pd.isnull(row['hasRequirement']) and pd.isnull(row['requiredCommunity']):
+            continue
+        res = gen_stakeholder_from_characteristics(data=row['hasRequirement'], location=row['requiredCommunity'])
+        if CHECK_SERVICE_SH_SHEET and res != row['hasBeneficialStakeholder']:
+            raise ShareholderFormattingException("Bad hasBeneficialStakeholder on row %s\n.\tExpecting (%s)\n\tFound.    (%s)"%(idx, res, row['hasBeneficialStakeholder']))
+        df.loc[idx,'hasBeneficialStakeholder'] = res
+
+    if UPDATE_SERVICE_SH_SHEET:
+        df.columns = header_df.columns
+        df = pd.concat([header_df, df]).reset_index(drop=True)
+        overwrite_sheet(sheet, df, dirin,filein, overwrite=True)
+
+
+if UPDATE_PROGRAMS_SHEET:
+    sheet_services = 'Services'
+    sheet = 'Programs'
+    xls = pd.ExcelFile(dirin+'/'+filein)
+    services_df = pd.read_excel(xls,sheet_services, header=1).drop_duplicates().dropna(how='all')
+    # take only the header rows from original
+    header_df = pd.read_excel(xls,sheet, header=None).drop_duplicates().dropna(how='all')[:2].copy()
+    df = pd.read_excel(xls,sheet, header=1).drop_duplicates().dropna(how='all')
+
+    for idx,row in df.iterrows():
+        services = services_df[services_df['Service'] == row['hasService']]
+        if services.shape[0]>0 and services.hasBeneficialStakeholder.dropna().shape[0] == services.hasBeneficialStakeholder.shape[0]:
+            df.loc[idx,'hasBeneficialStakeholder'] = ','.join(services.hasBeneficialStakeholder.values)
+        else:
+            raise MissingProgramHasServiceException("Program (%s) missing Service (%s)"%(row['Program'], row['hasService']))
+
+    df.columns = header_df.columns
+    df = pd.concat([header_df, df]).reset_index(drop=True)
+    overwrite_sheet(sheet, df, dirin,filein, overwrite=True)
+
+if CHECK_COMM_SHEET or UPDATE_COMM_SHEET:
+    sheet = 'Communities'
+    xls = pd.ExcelFile(dirin+'/'+filein)
+    df = pd.read_excel(xls,sheet, header=None)
+    df = df.drop_duplicates().dropna(how='all')
+    # take only the header rows from original
+    header_df = df[:2].copy()
+    df = pd.read_excel(xls,sheet, header=1)
+    df = df.drop_duplicates().dropna(how='all')
+
+
+    for idx,row in df.iterrows():
+        if pd.isnull(row['CommunityCharacteristic']) and pd.isnull(row['parcelHasLocation']):
+            continue
+        res = gen_community_from_characteristics(data=row['CommunityCharacteristic'], location=row['parcelHasLocation'].replace('_Location',''))
+        if CHECK_COMM_SHEET and res != row['Community']:
+            raise ShareholderFormattingException("Bad Community on row %s\n.\tExpecting (%s)\n\tFound.    (%s)"%(idx, res, row['Community']))
+        df.loc[idx,'Community'] = res
+
+    if UPDATE_COMM_SHEET:
+        df.columns = header_df.columns
+        df = pd.concat([header_df, df]).reset_index(drop=True)
+        overwrite_sheet(sheet, df, dirin,filein, overwrite=True)
 
 if IGNORE_COMM_SHEET:
     for k,v in stakeholders.items():
