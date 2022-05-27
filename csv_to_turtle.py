@@ -111,6 +111,7 @@ class_map = {
     'Feature':'loc_50871:Feature',
     'OrganizationID':'org:OrganizationID',
     'ServiceEvent':'ServiceEvent',
+    'ServiceFailureEvent':'ServiceFailureEvent'
 }
 prop_map = {
     'hasLegalName':'org:hasLegalName',
@@ -148,7 +149,7 @@ prop_map = {
     'hasStatus':'hasStatus',
     'forClient':'forClient',
     'satisfiesStakeholder':'satisfiesStakeholder',
-    'AtOrganization':'AtOrganization',
+    'atOrganization':'atOrganization',
     'forReferral':'forReferral',
     'occursAt':'occursAt',
     'previousEvent':'previousEvent',
@@ -170,8 +171,8 @@ prop_map = {
     'hasProblem':'hasProblem',
     'hasStatus':'hasStatus',
     'hasClientState':'hasClientState',
-
-
+    'forService':'forService', 
+    'hasFailureType':'hasFailureType',
 }
 
 
@@ -341,7 +342,36 @@ def format_characteristics_text(inst, chars, prop0='hasCharacteristic'):
                 COLLECT_NAMED_CHARS[comp_inst] = "%s rdf:type %s.\n"%(comp_inst,klass)
                 COLLECT_NAMED_CHARS[comp_inst] += "%s %s [%s].\n"%(comp_inst,prop1,text1)
 
+    return text
 
+def format_activity_codes(inst, values, prop0=None):
+    text = ''
+    # get property name
+    prop1=None
+    if 'hasOutcome' in values:
+        for val in re.split(r'([^a-z:]*[a-z:]*hasOutcome)',values):
+            if re.match(r'^[a-z:]*hasOutcome$', val) is not None:
+                prop1 = val.strip()
+                break
+        
+        rest = values.split(prop1)[-1].strip()
+    else:
+        rest = values.strip()
+    # get Outcome label or characteristics
+    rest = re.sub(r'(^\[)|(\]$)','', rest)
+    if rest.startswith('cids:hasCode'):
+        if prop1 is None:
+            text = format_characteristics_text(inst, [rest], prop0=prop0)
+        else:
+            prop0 = entity_str(prop0)
+            text1 = format_characteristics_text(inst, [rest], prop0=prop1)
+            text1 = text1.replace(inst, '').strip()
+            text1 = re.sub('\.$','', text1)
+            text = "%s %s [%s].\n"%(inst, prop0, text1)
+    else:
+        # assuming label was provided
+        prop0 = entity_str(prop0)
+        text += "%s %s %s.\n"%(inst, prop0, values)
     return text
 
 
@@ -781,7 +811,7 @@ try:
                 text += "   %s \"%s\";\n"%(prop, inst)
 
         # annotations with namespace
-        for col in ['hasStatus', 'forClient','AtOrganization','forReferral','hasLocation','previousEvent','nextEvent']:
+        for col in ['hasStatus', 'forClient','hasCode','atOrganization','forReferral','hasLocation','previousEvent','nextEvent']:
             if not pd.isna(row[col]):
                 inst = entity_str(row[col])
                 prop = entity_str(prop_map[col])
@@ -799,6 +829,47 @@ try:
         text += "\n"
 except ValueError as e:
     print(e)
+
+
+#####################################################
+# ServiceFailureEvents
+#####################################################
+try:
+    text += "#####################\n# ServiceFailureEvents\n####################\n"
+    df = pd.read_excel(xls,'ServiceFailureEvents', header=1)
+    df = df.drop_duplicates().dropna(how='all')
+    klass = entity_str(class_map['ServiceFailureEvent'])
+    for _,row in df.iterrows():
+        
+        seinst = entity_str(row['ServiceFailureEvent'])
+        text += "%s rdf:type %s;\n"%(seinst, klass)
+
+        # strings, no namespace
+        for col in ['hasName','hasDescription']:
+            if not pd.isna(row[col]):
+                inst = row[col]
+                prop = entity_str(prop_map[col])
+                text += "   %s \"%s\";\n"%(prop, inst)
+        text += ".\n"
+
+        # annotations with namespace
+        for col in ['hasCharacteristic']:
+            if not pd.isna(row[col]):
+                chars = row[col]
+                prop = col
+                text += format_characteristics_text(seinst, chars, prop0=prop)
+
+        # collect failure types as labeled activity or service, outcome, or defined as outcomes
+        for col in ['forService', 'hasFailureType']:
+            if not pd.isna(row[col]):
+                types = row[col]
+                prop = prop_map[col]
+                text += format_activity_codes(seinst, types, prop0=prop)
+
+        text += "\n"
+except ValueError as e:
+    print(e)
+
 
 
 #####################################################
@@ -936,6 +1007,7 @@ if CHECK_SERVICE_SH_SHEET or UPDATE_SERVICE_SH_SHEET:
         if CHECK_SERVICE_SH_SHEET and res != row['hasBeneficialStakeholder']:
             raise ShareholderFormattingException("Bad hasBeneficialStakeholder on row %s\n.\tExpecting (%s)\n\tFound.    (%s)"%(idx, res, row['hasBeneficialStakeholder']))
         df.loc[idx,'hasBeneficialStakeholder'] = res
+        df.loc[idx,'hasFocus'] = row['hasRequirement']
 
     if UPDATE_SERVICE_SH_SHEET:
         df.columns = header_df.columns
