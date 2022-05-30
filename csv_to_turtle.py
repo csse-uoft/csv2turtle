@@ -7,6 +7,32 @@
 #   create a turtle (.ttl) file from csv/excel data files
 ######################################################
 
+
+
+import os
+from datetime import datetime
+from misc_lib import *
+
+import numpy as np
+import pandas as pd
+
+import xlsxwriter
+
+
+# file_date = datetime.now().strftime("%B %d, %Y %H:%M:%S")
+file_date = datetime.now().strftime("%B %Y Release")
+
+# filein  = 'unit_tests_ieee.xlsx'
+# dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
+# fileout = 'unit_tests_ieee.ttl'
+# dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
+
+filein  = 'unit_tests3.xlsx'
+dirin = 'csv'
+fileout = 'unit_test3.ttl'
+dirout = 'turtle'
+
+
 ############################################################################
 # For the Services Sheet
 # Service hasBeneficalStakeholder values should match the hasRequirement and requiredCommunity, if set.
@@ -52,15 +78,6 @@ UPDATE_COMM_SHEET = True
 ############################################################################
 
 
-import os
-from datetime import datetime
-from misc_lib import *
-
-import numpy as np
-import pandas as pd
-
-import xlsxwriter
-
 class CompositeCharacteristicException(Exception):
     """Raised when CompositeCharacteristic has less than 2 codes"""
     pass
@@ -76,19 +93,6 @@ class ShareholderFormattingException(Exception):
 class MissingProgramHasServiceException(Exception):
     """Raised when a Program does not have a matching service in the Services sheet"""
     pass
-
-# file_date = datetime.now().strftime("%B %d, %Y %H:%M:%S")
-file_date = datetime.now().strftime("%B %Y Release")
-
-# filein  = 'unit_tests_ieee.xlsx'
-# dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
-# fileout = 'unit_tests_ieee.ttl'
-# dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
-
-filein  = 'unit_tests3.xlsx'
-dirin = 'csv'
-fileout = 'unit_test3.ttl'
-dirout = 'turtle'
 
 class_map = {
     "Organization":"Organization",
@@ -520,24 +524,21 @@ try:
         oinst = entity_str(row['Organization'])
         text += "%s rdf:type %s;\n"%(oinst, klass)
 
-        nminst = row["hasLegalName"]
+        inst = row["hasLegalName"]
         prop =   entity_str(prop_map['hasLegalName'])
-        text += "   %s \"%s\";\n"%(prop, nminst)
+        text += "   %s \"%s\";\n"%(prop, inst)
 
-        iminst = row["hasImpactModel"]
-        iminst = format_lists([iminst])
+        insts = row["hasImpactModel"]
+        insts = format_lists([insts])
         prop =   entity_str(prop_map['hasImpactModel'])
-        text += "   %s %s;\n"%(prop, ','.join(iminst))
+        text += "   %s %s;\n"%(prop, ','.join(insts))
 
-        iminst = row["hasIndicator"]
-        iminst = format_lists([iminst])
-        prop =   entity_str(prop_map['hasIndicator'])
-        text += "   %s %s;\n"%(prop, ','.join(iminst))
+        insts = row["hasIndicator"]
+        if not pd.isnull(insts):
+            insts = format_lists([insts])
+            prop =   entity_str(prop_map['hasIndicator'])
+            text += "   %s %s;\n"%(prop, ','.join(insts))
 
-        iminst = row["hasOutcome"]
-        iminst = format_lists([iminst])
-        prop =   entity_str(prop_map['hasOutcome'])
-        text += "   %s %s;\n"%(prop, ','.join(iminst))
 
 
         inst = entity_str(idinst)
@@ -552,8 +553,11 @@ try:
         text += "   %s \"%s\".\n"%(prop,idinst)
 
 
-        # Characteristics
+        # Get Characteristics with codes
         text += format_characteristics_text(inst, row['hasCharacteristic'])
+        # Get Outcomes with Code
+        text += format_characteristics_text(oinst, row["hasOutcome"], prop0='hasOutcome')
+
         text += "\n"
 except ValueError as e:
     print(e)
