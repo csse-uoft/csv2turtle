@@ -6,3 +6,10 @@
 
 # Installation
 - run `conda env create -f Py2Turtle.yml`
+
+# Generate ttl
+```sh
+conda activate Py2Turtle
+python csv_to_turtle.py
+```
+
