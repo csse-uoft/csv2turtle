@@ -27,6 +27,11 @@ file_date = datetime.now().strftime("%B %Y Release")
 # fileout = 'unit_tests_ieee.ttl'
 # dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/IEEE Smart Cities 2022'
 
+# filein  = 'unit_tests_jowo.xlsx'
+# dirin =  os.path.expanduser("~") + '/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/JOWO 2022'
+# fileout = 'unit_tests_jowo.ttl'
+# dirout = os.path.expanduser("~") +'/Dropbox/Compass Shared Folder/Use Cases/Competency Questions/JOWO 2022'
+
 filein  = 'unit_tests3.xlsx'
 dirin = 'csv'
 fileout = 'unit_test3.ttl'
@@ -115,7 +120,9 @@ class_map = {
     'Feature':'loc_50871:Feature',
     'OrganizationID':'org:OrganizationID',
     'ServiceEvent':'ServiceEvent',
-    'ServiceFailureEvent':'ServiceFailureEvent'
+    'ServiceFailureEvent':'ServiceFailureEvent',
+    'EducationEvent':'EducationEvent',
+    'Certification':'Certification',
 }
 prop_map = {
     'hasLegalName':'org:hasLegalName',
@@ -177,6 +184,8 @@ prop_map = {
     'hasClientState':'hasClientState',
     'forService':'forService', 
     'hasFailureType':'hasFailureType',
+    'hasCertification':'hasCertification',
+    
 }
 
 
@@ -637,9 +646,10 @@ try:
         prop = entity_str(prop_map['hasName'])
         text += "   %s \"%s\";\n"%(prop, ninst)
 
-        inst = '; '.join(grp["hasDescription"].unique())
-        prop = entity_str(prop_map['hasDescription'])
-        text += "   %s \"%s\";\n"%(prop, inst)
+        if grp["hasDescription"].dropna().shape[0]>0:
+            inst = '; '.join(grp["hasDescription"].dropna().unique())
+            prop = entity_str(prop_map['hasDescription'])
+            text += "   %s \"%s\";\n"%(prop, inst)
 
         insts = format_lists(grp["hasProgram"])
         prop = entity_str(prop_map["hasProgram"])
@@ -682,9 +692,12 @@ try:
         prop = entity_str(prop_map['hasName'])
         text += "   %s \"%s\";\n"%(prop, ninst)
 
-        inst = '; '.join(grp["hasDescription"].values)
-        prop = entity_str(prop_map['hasDescription'])
-        text += "   %s \"%s\";\n"%(prop, inst)
+        
+        if grp["hasDescription"].dropna().shape[0]>0:
+            inst = '; '.join(grp["hasDescription"].dropna().unique())
+            # inst = '; '.join(grp["hasDescription"].dropna().values)
+            prop = entity_str(prop_map['hasDescription'])
+            text += "   %s \"%s\";\n"%(prop, inst)
 
         insts = format_lists(grp["hasService"])
         prop = entity_str(prop_map['hasService'])
@@ -828,6 +841,64 @@ try:
                 prop = entity_str(prop_map[col])
                 text += "   %s \"%s\";\n"%(prop, inst)
             
+
+        text += ".\n"
+        text += "\n"
+except ValueError as e:
+    print(e)
+
+#####################################################
+# EducationEvents
+#####################################################
+try:
+    text += "#####################\n# EducationEvents\n####################\n"
+    df = pd.read_excel(xls,'EducationEvents', header=1)
+    df = df.drop_duplicates().dropna(how='all')
+    klass = entity_str(class_map['EducationEvent'])
+    for _,row in df.iterrows():
+        
+        seinst = entity_str(row['EducationEvent'])
+        text += "%s rdf:type %s;\n"%(seinst, klass)
+
+        # strings, no namespace
+        for col in ['hasName','hasDescription']:
+            if not pd.isna(row[col]):
+                inst = row[col]
+                prop = entity_str(prop_map[col])
+                text += "   %s \"%s\";\n"%(prop, inst)
+
+        # annotations with namespace
+        for col in ['hasStatus', 'forClient','hasCertification','hasLocation','previousEvent','nextEvent']:
+            if not pd.isna(row[col]):
+                inst = entity_str(row[col])
+                prop = entity_str(prop_map[col])
+                text += "   %s %s;\n"%(prop, inst)
+
+        # Dates with convertion: YYYY-CCYY-MM-DD HH:MM:SS to CCYY-MM-DDThh:mm:ss.sss
+        for col in ['occursAt','hasBeginning', 'hasEnd']:
+            inst = date_to_xsd(row[col])
+            if not pd.isna(inst):
+                prop = entity_str(prop_map[col])
+                text += "   %s \"%s\";\n"%(prop, inst)
+            
+
+        text += ".\n"
+        text += "\n"
+except ValueError as e:
+    print(e)
+
+#####################################################
+# Certifications
+#####################################################
+try:
+    text += "#####################\n# Certifications\n####################\n"
+    df = pd.read_excel(xls,'Certifications', header=1)
+    df = df.drop_duplicates().dropna(how='all')
+    klass = entity_str(class_map['Certification'])
+    for _,row in df.iterrows():
+        
+        seinst = entity_str(row['Certification'])
+        text += "%s rdf:type %s;\n"%(seinst, klass)
 
         text += ".\n"
         text += "\n"
